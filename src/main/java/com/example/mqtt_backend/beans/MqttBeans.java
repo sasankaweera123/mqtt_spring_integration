@@ -12,10 +12,10 @@ import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannel
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.integration.mqtt.support.MqttHeaders;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
+
+import java.util.Objects;
 
 @Configuration
 public class MqttBeans {
@@ -54,17 +54,12 @@ public class MqttBeans {
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler handler() {
-        return new MessageHandler() {
-
-            @Override
-            public void handleMessage(Message<?> message) throws MessagingException {
-                String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
-                if(topic.equals("myTopic")){
-                    System.out.println("This is the Topic");
-                }
-                System.out.println(message.getPayload());
+        return message -> {
+            String topic = Objects.requireNonNull(message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC)).toString();
+            if(topic.equals("myTopic")){
+                System.out.println("This is the Topic");
             }
-
+            System.out.println(message.getPayload());
         };
     }
 
