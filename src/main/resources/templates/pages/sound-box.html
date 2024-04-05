@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}"
+>
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">Add Sound Box</button>
+        </div>
+        <div class="sound-box-table">
+            <div class="row">
+                <div class="col-md-12">
+                    <div th:replace="components/table_fragment :: sound-box-table" ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="components/modal_fragment :: add_sound_box_modal"></div>
+
+</section>
+</body>
+</html>

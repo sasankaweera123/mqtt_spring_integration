@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sound-box-table" class="soundbox-table card">
+    <div class="card-body m-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Serial Number</th>
+                <th scope="col">Mqtt Topic</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="soundbox : ${sound_box_details}">
+                <td th:text="${soundbox.soundBoxId}">1</td>
+                <td th:text="${soundbox.serialNumber}">123456</td>
+                <td th:text="${soundbox.topic}">topic</td>
+                <td th:text="${soundbox.soundBoxStatus}">Active</td>
+                <td>
+                    <a th:href="@{'/soundbox/edit/' + ${soundbox.soundBoxId}}" class="btn btn-primary">Edit</a>
+                    <a th:href="@{/soundbox/sound-box/delete/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}" class="btn btn-danger">Delete</a>
+                </td>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

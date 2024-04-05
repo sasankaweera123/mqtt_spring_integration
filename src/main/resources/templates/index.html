@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:replace="components/fragments :: import_header">
     <title>Title</title>
 </head>
 <body>
+
+<!--Main Navigation-->
 <div th:replace="components/fragments :: menue"></div>
+
+<!--content-->
+<section layout:fragment="content" class="m-5 p-5 page-section"></section>
+
+<!--footer-->
+<div th:replace="components/fragments :: footer"></div>
 </body>
 </html>

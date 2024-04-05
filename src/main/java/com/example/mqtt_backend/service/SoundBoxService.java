@@ -1,5 +1,6 @@
 package com.example.mqtt_backend.service;
 
+import com.example.mqtt_backend.constant.Endpoint;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.repository.SoundBoxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class SoundBoxService {
     }
 
     public void saveSoundBoxDetails(SoundBoxDetails soundBoxDetails) {
+        if(soundBoxDetails == null) {
+            throw new IllegalArgumentException("SoundBoxDetails is null");
+        }
+        soundBoxDetails.setTopic(Endpoint.SOUNDBOX_SERIAL_HEADER + soundBoxDetails.getSerialNumber());
         soundBoxRepository.save(soundBoxDetails);
     }
 
@@ -58,5 +63,9 @@ public class SoundBoxService {
         }
         soundBoxRepository.save(soundBox);
 
+    }
+
+    public int getSoundBoxCount() {
+        return soundBoxRepository.findAll().size();
     }
 }

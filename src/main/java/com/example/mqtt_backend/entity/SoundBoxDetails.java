@@ -19,6 +19,8 @@ public class SoundBoxDetails {
 
     public SoundBoxDetails() {
     }
+
+
     public SoundBoxDetails(String serialNumber, String topic, SoundBoxStatus soundBoxStatus) {
         this.serialNumber = serialNumber;
         this.topic = topic;

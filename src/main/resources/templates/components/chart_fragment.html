@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:src="@{/js/count_card.js}"></script>
+</head>
+<body>
+<div th:fragment="soundbox-count-chart" class="soundbox-count-card card">
+    <div class="card-body my-5">
+        <h4 class="card-title"><span th:text="${count_title}"> Soundbox Count</span></h4>
+        <div class="soundbox-count-chart my-5">
+            <canvas id="myDonutChart"></canvas>
+        </div>
+        <p class="card-text">Total Sound boxes: <span th:text="${total_sound_boxes}">0</span></p>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var count_labels = /*[[${count_labels}]]*/ [];
+    var count_data = /*[[${count_data}]]*/ [];
+    createDonutChart(count_labels, count_data);
+    /*]]>*/
+</script>
+</body>
+</html>

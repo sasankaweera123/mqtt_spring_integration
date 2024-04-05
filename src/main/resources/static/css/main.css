@@ -1,0 +1,19 @@
+.navbar{
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.page-section{
+    min-height: 80vh;
+}
+
+.soundbox-count-card {
+    width: 30rem;
+    align-items: center;
+    text-align: center;
+}
+
+.soundbox-count-card .soundbox-count-chart{
+    width: 20rem !important;
+    height: 20rem !important;
+}

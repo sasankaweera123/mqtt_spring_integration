@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="add_sound_box_modal" class="modal fade" id="addSoundBoxModal" tabindex="-1"
+     aria-labelledby="addSoundBoxModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSoundBoxModalLabel">Add New Sound Box</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/soundbox/sound-box/save}" method="post">
+                    <div class="mb-3">
+                        <label for="serialNumber" class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" id="serialNumber" name="serialNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="soundBoxStatus" class="form-label">Status</label>
+                        <select class="form-select" id="soundBoxStatus" name="soundBoxStatus" required>
+                            <option th:each="status : ${sound_box_status}" th:value="${status}" th:text="${status}">Production</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
