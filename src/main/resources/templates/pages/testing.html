@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}"
+>
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form th:action="@{/soundbox/testing/mqtt/send}" method="post" th:object="${mqtt_form}">
+                    <div class="form-group">
+                        <label for="soundBoxId"></label>
+                        <select class="form-select" id="soundBoxId" name="soundBoxId" th:field="*{topic}" required>
+                            <option value="">Select Sound Box</option>
+                            <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.topic}"
+                                    th:text="${soundbox.serialNumber}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                            <label for="soundBoxMessage">Message</label>
+                            <input type="text" class="form-control" id="soundBoxMessage" name="soundBoxMessage" th:field="*{message}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -6,12 +6,18 @@ function createDonutChart(labels, data) {
             backgroundColor: [
                 '#FF6384',
                 '#36A2EB',
-                '#FFCE56'
+                '#FFCE56',
+                '#355E3B',
+                '#C70039',
+                '#FF5733'
             ],
             hoverBackgroundColor: [
                 '#FF6384',
                 '#36A2EB',
-                '#FFCE56'
+                '#FFCE56',
+                '#355E3B',
+                '#C70039',
+                '#FF5733'
             ]
         }]
     };

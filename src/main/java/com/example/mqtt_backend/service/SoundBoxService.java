@@ -1,6 +1,6 @@
 package com.example.mqtt_backend.service;
 
-import com.example.mqtt_backend.constant.Endpoint;
+import com.example.mqtt_backend.constant.ResourcePath;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.repository.SoundBoxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class SoundBoxService {
         if(soundBoxDetails == null) {
             throw new IllegalArgumentException("SoundBoxDetails is null");
         }
-        soundBoxDetails.setTopic(Endpoint.SOUNDBOX_SERIAL_HEADER + soundBoxDetails.getSerialNumber());
+        soundBoxDetails.setTopic(ResourcePath.SOUNDBOX_SERIAL_HEADER + soundBoxDetails.getSerialNumber());
         soundBoxRepository.save(soundBoxDetails);
     }
 
@@ -54,9 +54,7 @@ public class SoundBoxService {
         }
         if(!soundBoxDetails.getSerialNumber().isEmpty() && !soundBoxDetails.getSerialNumber().equals(soundBox.getSerialNumber())){
             soundBox.setSerialNumber(soundBoxDetails.getSerialNumber());
-        }
-        if(!soundBoxDetails.getTopic().isEmpty() && !soundBoxDetails.getTopic().equals(soundBox.getTopic())){
-            soundBox.setTopic(soundBoxDetails.getTopic());
+            soundBoxDetails.setTopic(ResourcePath.SOUNDBOX_SERIAL_HEADER + soundBoxDetails.getSerialNumber());
         }
         if(!soundBoxDetails.getSoundBoxStatus().equals(soundBox.getSoundBoxStatus())){
             soundBox.setSoundBoxStatus(soundBoxDetails.getSoundBoxStatus());

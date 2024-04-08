@@ -1,7 +1,7 @@
 package com.example.mqtt_backend.controller.api;
 
 
-import com.example.mqtt_backend.constant.Endpoint;
+import com.example.mqtt_backend.constant.ResourcePath;
 import com.example.mqtt_backend.modal.Response;
 import com.example.mqtt_backend.service.MqttService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,8 @@ import static org.springframework.http.HttpStatus.NOT_EXTENDED;
 
 
 @RestController
-@RequestMapping(Endpoint.MQTT)
+@RequestMapping(ResourcePath.MQTT)
 public class MqttController {
-
 
     private final MqttService mqttService;
 

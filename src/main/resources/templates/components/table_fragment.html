@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="sound-box-table" class="soundbox-table card">
+<div th:fragment="sound-box-table" class="soundbox-table card" >
     <div class="card-body m-5">
         <table class="table">
             <thead>
@@ -20,13 +20,20 @@
                 <td th:text="${soundbox.topic}">topic</td>
                 <td th:text="${soundbox.soundBoxStatus}">Active</td>
                 <td>
-                    <a th:href="@{'/soundbox/edit/' + ${soundbox.soundBoxId}}" class="btn btn-primary">Edit</a>
+                    <a  th:href="'#updateSoundBoxModal'+${soundbox.soundBoxId}"
+                            class="btn btn-primary edit-btn"
+                            data-bs-toggle="modal"
+                        th:attr="data-soundbox-id=${soundbox.soundBoxId}"
+                    >Edit</a>
+                    <div th:replace="components/modal_fragment :: update_sound_box_modal" ></div>
                     <a th:href="@{/soundbox/sound-box/delete/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}" class="btn btn-danger">Delete</a>
                 </td>
             </tbody>
         </table>
     </div>
-</div>
 
+</div>
+<script>
+</script>
 </body>
 </html>

@@ -21,6 +21,9 @@ public class MqttService {
         JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
         mqttGateway.sendToMqtt(jsonObject.get("message").toString().replace("\"", ""), jsonObject.get("topic").toString().replace("\"", ""));
         System.out.println(jsonObject.get("topic").toString().replace("\"", ""));
+    }
 
+    public void mqttPublishViaPortal(String topic, String message) {
+        mqttGateway.sendToMqtt(message, topic);
     }
 }
