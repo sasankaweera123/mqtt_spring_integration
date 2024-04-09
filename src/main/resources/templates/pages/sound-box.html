@@ -5,8 +5,10 @@
 <body>
 <section layout:fragment="content">
     <div class="container">
-        <div class="row">
-            <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+        <div class="sound-box-page-header">
+            <div class="input-search-container">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">Add Sound Box</button>
         </div>
         <div class="sound-box-table">
@@ -18,7 +20,7 @@
         </div>
     </div>
 
-    <div th:replace="components/modal_fragment :: add_sound_box_modal"></div>
+    <div th:replace="components/modal/add_sound_box_modal_fragment :: add_sound_box_modal"></div>
 
 </section>
 </body>

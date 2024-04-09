@@ -39,6 +39,8 @@ public class SoundBoxController {
         List<String> labels = Stream.of(SoundBoxStatus.values()).map(Enum::name).toList();
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         List<Integer> data = new ArrayList<>();
+        List<Process> processes = Arrays.asList(Process.values());
+        MqttForm mqttForm = new MqttForm();
         // get the count of each sound box status
         for (SoundBoxStatus status : SoundBoxStatus.values()) {
             int count = (int) soundBoxDetails.stream().filter(soundBox -> Objects.equals(soundBox.getSoundBoxStatus(), status)).count();
@@ -52,6 +54,9 @@ public class SoundBoxController {
         model.addAttribute("count_data", data);
         model.addAttribute("count_title", "Sound Box Dashboard");
         model.addAttribute("total_sound_boxes", 450);
+        model.addAttribute("mqtt_form", mqttForm);
+        model.addAttribute("processes", processes);
+        model.addAttribute("sound_box_details", soundBoxDetails);
 
         return ResourcePath.DASHBOARD_PAGE;
     }
@@ -60,29 +65,20 @@ public class SoundBoxController {
     public String soundBox(Model model) {
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         SoundBoxForm soundBoxForm = new SoundBoxForm();
-
+        System.out.println(Arrays.toString(SoundBoxStatus.values()));
         model.addAttribute("sound_box_details", soundBoxDetails);
         model.addAttribute("sound_box_form", soundBoxForm);
         model.addAttribute("sound_box_status", SoundBoxStatus.values());
         return ResourcePath.SOUND_BOX_PAGE;
     }
 
-    @GetMapping(ResourcePath.TESTING)
-    public String testing(Model model) {
-        List<Process> processes = Arrays.asList(Process.values());
-        List <SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
-        MqttForm mqttForm = new MqttForm();
-        model.addAttribute("processes", processes);
-        model.addAttribute("sound_box_details", soundBoxDetails);
-        model.addAttribute("mqtt_form", mqttForm);
-        return ResourcePath.TESTING_PAGE;
-    }
+
 
     @PostMapping(ResourcePath.SOUND_BOX_SAVE)
     public String saveSoundBox(SoundBoxDetails soundBoxDetails) {
         System.out.println(soundBoxDetails);
         soundBoxService.saveSoundBoxDetails(soundBoxDetails);
-        return ResourcePath.TESTING_PAGE;
+        return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
     @GetMapping(ResourcePath.SOUND_BOX_DELETE + "/{soundBoxId}")
@@ -96,10 +92,10 @@ public class SoundBoxController {
     @PostMapping(ResourcePath.SOUND_BOX_UPDATE + "/{id}")
     public String updateSoundBox(@PathVariable long id, @ModelAttribute SoundBoxForm soundBoxDetails){
         System.out.println(soundBoxDetails);
-//        SoundBoxDetails soundBox = soundBoxService.getSoundBoxDetails(id);
-//        soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
-//        soundBox.setSoundBoxStatus(SoundBoxStatus.valueOf(soundBoxDetails.getUpdateStatus()));
-//        soundBoxService.updateSoundBoxDetails(id, soundBox);
+        SoundBoxDetails soundBox = soundBoxService.getSoundBoxDetails(id);
+        soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
+        soundBox.setSoundBoxStatus(soundBoxDetails.getUpdateStatus());
+        soundBoxService.updateSoundBoxDetails(id, soundBox);
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
@@ -113,7 +109,7 @@ public class SoundBoxController {
             System.out.println(e.getMessage());
         }
 
-        return "redirect:/" + ResourcePath.TESTING;
+        return ResourcePath.HOME_PAGE_URL;
     }
 
 

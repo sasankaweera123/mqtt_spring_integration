@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}"
+>
+<body>
+<section layout:fragment="content">
+    <div class="container">
+        <div class="user-handling-page-header">
+            <h4 class="text-primary">User Handling</h4>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div th:replace="components/table_fragment :: user-table" ></div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="components/modal/add_user_modal_fragment :: add_user_modal"></div>
+</section>
+</body>
+</html>

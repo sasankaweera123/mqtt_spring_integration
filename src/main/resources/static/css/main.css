@@ -7,6 +7,21 @@
     min-height: 80vh;
 }
 
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.card-container .dashboard-card{
+    margin: 1rem;
+}
+.user-handling-page-header{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
 .soundbox-count-card {
     width: 30rem;
     align-items: center;
@@ -16,4 +31,32 @@
 .soundbox-count-card .soundbox-count-chart{
     width: 20rem !important;
     height: 20rem !important;
+}
+
+.sound-box-page-header{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.input-search-container{
+    width: 60%;
+}
+.mqtt-card{
+    width: 32rem;
+}
+
+.form-group{
+    margin: 2rem 0;
+}
+
+.form-group label{
+    font-weight: bold;
+}
+
+.form-group input{
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
 }

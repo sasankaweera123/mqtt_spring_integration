@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="mqtt-testing">
+  <div class="row card mqtt-card">
+    <div class="col-md-12 card-body">
+      <h5 class="card-title">MQTT Testing</h5>
+      <form th:action="@{/soundbox/testing/mqtt/send}" method="post" th:object="${mqtt_form}">
+        <div class="form-group">
+          <label for="soundBoxId">Select Serial Number</label>
+          <select class="form-select" id="soundBoxId" name="soundBoxId" th:field="*{topic}" required>
+            <option value="">Select Sound Box</option>
+            <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.topic}"
+                    th:text="${soundbox.serialNumber}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="soundBoxMessage">Message</label>
+          <input type="text" class="form-control" id="soundBoxMessage" name="soundBoxMessage" th:field="*{message}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

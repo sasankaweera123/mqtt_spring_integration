@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div th:fragment="update_sound_box_modal" class="modal fade" th:id="'updateSoundBoxModal' + @{${soundbox.soundBoxId}}" tabindex="-1"
+     aria-labelledby="updateSoundBoxModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateSoundBoxModalLabel">Update Sound Box</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form th:action="@{/soundbox/sound-box/update/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}"
+              method="post"
+              th:object="${sound_box_form}">
+          <div class="mb-3">
+            <label for="UpdateSerialNumber" class="form-label">Serial Number</label>
+            <input type="text" class="form-control" id="UpdateSerialNumber"
+                   name="UpdateSerialNumber"
+                   required
+                   th:filed="*{updateSerialNumber}"
+                   th:value="@{${soundbox.serialNumber}}"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="previousStatus" class="form-label">Previous Status</label>
+            <input type="text" class="form-control" id="previousStatus"
+                   name="previousStatus"
+                   th:value="@{${soundbox.soundBoxStatus}}"
+                   readonly />
+          </div>
+          <div class="mb-3">
+            <label for="statusGroup" class="form-label">Status</label>
+            <select id="statusGroup" th:field="*{updateStatus}"
+                    class="form-select">
+              <option value="">Select Update Status</option>
+              <option th:each="group: ${sound_box_status}"
+                      th:value="${group}"
+                      th:text="${group} + '-' + ${group == soundbox.soundBoxStatus}"
+                      th:selected="${group == soundbox.soundBoxStatus}"></option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

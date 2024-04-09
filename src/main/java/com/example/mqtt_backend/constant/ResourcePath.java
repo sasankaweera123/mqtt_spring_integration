@@ -14,19 +14,25 @@ public interface ResourcePath {
     String LOGIN_FAILED = APP_ROOT + "/login";
     String HOME_PAGE = APP_ROOT + "/home";
     String DASHBOARD = APP_ROOT + "/dashboard";
-    String TESTING = APP_ROOT + "/testing";
+    String USERHANDLING = APP_ROOT + "/user-handling";
     String HOME_PAGE_URL = "redirect:/" + DASHBOARD;
     String SOUND_BOX = APP_ROOT + "/sound-box";
     String SOUND_BOX_SAVE = SOUND_BOX + "/save";
     String SOUND_BOX_UPDATE = SOUND_BOX + "/update";
     String SOUND_BOX_DELETE = SOUND_BOX + "/delete";
-    String TESTING_MQTT_SEND = TESTING + "/mqtt/send";
+    String TESTING_MQTT_SEND = "soundbox/testing/mqtt/send";
+
+    // User Handling
+
+    String USER_ADD = USERHANDLING + "/add";
+    String USER_UPDATE = USERHANDLING + "/update";
+    String USER_DELETE = USERHANDLING + "/delete";
 
     // Web Pages
     String LOGIN_PAGE = "pages/login-user";
     String DASHBOARD_PAGE = "pages/dashboard";
     String SOUND_BOX_PAGE = "pages/sound-box";
-    String TESTING_PAGE = "pages/testing";
+    String USERHANDLING_PAGE = "pages/users-handling";
 
     // Login
     String LOGIN_SUCCESS = "Login Success";

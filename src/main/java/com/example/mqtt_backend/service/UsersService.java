@@ -6,6 +6,7 @@ import com.example.mqtt_backend.repository.LoginUsersRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,17 +20,50 @@ public class UsersService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public boolean isUserExist(String email) {
+        return loginUsersRepository.findByEmail(email) != null;
+    }
+
     public void addUser(LoginUsers loginUsers) {
-        LoginUsers user = new LoginUsers(loginUsers.getEmail(), loginUsers.getUsername(), passwordEncoder.encode(loginUsers.getPassword()));
+        if(isUserExist(loginUsers.getEmail())) {
+            throw new IllegalArgumentException("User already exist");
+        }
+        LoginUsers user = new LoginUsers(loginUsers.getEmail(), loginUsers.getUsername(), passwordEncoder.encode(loginUsers.getPassword()), loginUsers.getUserRole());
         loginUsersRepository.save(user);
     }
 
-    public LoginUsers getUserByEmail(String email) {
-        return loginUsersRepository.findByEmail(email);
+    public List<LoginUsers> getAllUsers() {
+        return loginUsersRepository.findAll();
     }
 
-    public LoginUsers getUserByEmailAndPassword(String email, String password) {
-        return loginUsersRepository.findByEmailAndPassword(email, password).orElse(null);
+    public void updateUser(Long id ,LoginUsers loginUsers) {
+        LoginUsers user = loginUsersRepository.findById(id).orElse(null);
+        System.out.println(user);
+        if(user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        if(loginUsers == null) {
+            throw new IllegalArgumentException("User is null");
+        }
+        if(!loginUsers.getEmail().isEmpty() && !loginUsers.getEmail().equals(user.getEmail())){
+            user.setEmail(loginUsers.getEmail());
+        }
+        if(!loginUsers.getUsername().isEmpty() && !loginUsers.getUsername().equals(user.getUsername())){
+            user.setUsername(loginUsers.getUsername());
+        }
+        if(!(loginUsers.getPassword()==null) && !passwordEncoder.matches(loginUsers.getPassword(), user.getPassword())){
+            user.setPassword(passwordEncoder.encode(loginUsers.getPassword()));
+        }
+        if(!(loginUsers.getUserRole() ==null) && !loginUsers.getUserRole().equals(user.getUserRole())){
+            user.setUserRole(loginUsers.getUserRole());
+        }
+        loginUsersRepository.save(user);
+    }
+
+    public void deleteUser(long id) {
+        if(loginUsersRepository.existsById(id)) {
+            loginUsersRepository.deleteById(id);
+        }
     }
 
     public String UserLogin(String email, String password) {

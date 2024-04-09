@@ -1,5 +1,6 @@
 package com.example.mqtt_backend.entity;
 
+import com.example.mqtt_backend.enumeration.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,13 +15,15 @@ public class LoginUsers {
     private String email;
     private String username;
     private String password;
+    private UserRole userRole;
 
     public LoginUsers() {
     }
 
-    public LoginUsers(String email, String username, String password) {
+public LoginUsers(String email, String username, String password, UserRole userRole) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.userRole = userRole;
     }
 }

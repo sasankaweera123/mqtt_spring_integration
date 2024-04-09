@@ -1,15 +1,18 @@
 package com.example.mqtt_backend.controller;
 
 import com.example.mqtt_backend.constant.ResourcePath;
+import com.example.mqtt_backend.entity.LoginUsers;
+import com.example.mqtt_backend.enumeration.UserRole;
+import com.example.mqtt_backend.modal.dto.NewUserForm;
+import com.example.mqtt_backend.modal.dto.UpdateUserForm;
 import com.example.mqtt_backend.modal.dto.UserLoginForm;
 import com.example.mqtt_backend.service.UsersService;
-import jakarta.websocket.Endpoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -28,7 +31,7 @@ public class UserController {
         return ResourcePath.LOGIN_PAGE;
     }
 
-    @PostMapping(ResourcePath.LOGIN )
+    @PostMapping(ResourcePath.LOGIN)
     public String userLogin(@ModelAttribute UserLoginForm userLoginForm, Model model) {
         System.out.println(userLoginForm.getPassword());
         String outCome = usersService.UserLogin(userLoginForm.getEmail(), userLoginForm.getPassword());
@@ -50,4 +53,50 @@ public class UserController {
         };
     }
 
+
+    @GetMapping(ResourcePath.USERHANDLING)
+    public String users(Model model) {
+        List<LoginUsers> user = usersService.getAllUsers();
+        List<UserRole> userRoles = Arrays.asList(UserRole.values());
+        UpdateUserForm updateUserForm = new UpdateUserForm();
+        NewUserForm newUserForm = new NewUserForm();
+
+        System.out.println(user);
+        model.addAttribute("user_details", user);
+        model.addAttribute("user_form", updateUserForm);
+        model.addAttribute("new_user_form", newUserForm);
+        model.addAttribute("user_role", userRoles);
+        return ResourcePath.USERHANDLING_PAGE;
+    }
+
+    @PostMapping(ResourcePath.USER_UPDATE + "/{id}")
+    public String updateUser(@PathVariable long id, @ModelAttribute UpdateUserForm userForm) {
+        LoginUsers user = new LoginUsers();
+        user.setEmail(userForm.getUpdateEmail());
+        user.setUsername(userForm.getUpdateUsername());
+        user.setUserRole(userForm.getUpdateUserRole());
+        user.setPassword(userForm.getUpdatePassword());
+        usersService.updateUser(id,user);
+        return "redirect:/" + ResourcePath.USERHANDLING;
+    }
+
+    @GetMapping(ResourcePath.USER_DELETE + "/{id}")
+    public String deleteUser(@PathVariable long id) {
+        usersService.deleteUser(id);
+        return "redirect:/" + ResourcePath.USERHANDLING;
+    }
+
+    @PostMapping(ResourcePath.USER_ADD)
+    public String addUser(@ModelAttribute NewUserForm newUserForm) {
+        if(!newUserForm.getPassword().equals(newUserForm.getConfirmPassword())){
+            throw new IllegalArgumentException("Password and Confirm Password does not match");
+        }
+        LoginUsers user = new LoginUsers();
+        user.setEmail(newUserForm.getEmail());
+        user.setUsername(newUserForm.getUsername());
+        user.setUserRole(newUserForm.getUserRole());
+        user.setPassword(newUserForm.getPassword());
+        usersService.addUser(user);
+        return "redirect:/" + ResourcePath.USERHANDLING;
+    }
 }

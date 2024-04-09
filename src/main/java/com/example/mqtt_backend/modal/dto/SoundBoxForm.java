@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class SoundBoxForm {
     private String updateSerialNumber;
-    private String updateStatus;
+    private SoundBoxStatus updateStatus;
 
     public SoundBoxForm() {
     }
 
-    public SoundBoxForm(String updateSerialNumber, String updateStatus) {
+    public SoundBoxForm(String updateSerialNumber, SoundBoxStatus updateStatus) {
         this.updateSerialNumber = updateSerialNumber;
         this.updateStatus = updateStatus;
     }
