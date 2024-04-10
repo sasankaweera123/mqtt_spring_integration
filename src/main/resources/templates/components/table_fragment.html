@@ -14,7 +14,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="soundbox : ${sound_box_details}">
+            <tr th:each="soundbox : ${sound_box_details}" th:data-status="${soundbox.soundBoxStatus}">
                 <td th:text="${soundbox.soundBoxId}">1</td>
                 <td th:text="${soundbox.serialNumber}">123456</td>
                 <td th:text="${soundbox.topic}">topic</td>
@@ -26,7 +26,12 @@
                         th:attr="data-soundbox-id=${soundbox.soundBoxId}"
                     >Edit</a>
                     <div th:replace="components/modal/update_sound_box_modal_fragment :: update_sound_box_modal" ></div>
-                    <a th:href="@{/soundbox/sound-box/delete/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}" class="btn btn-danger">Delete</a>
+                    <a th:href="'#deleteSoundBoxModal' + ${soundbox.soundBoxId}"
+                       class="btn btn-danger"
+                       data-bs-toggle="modal"
+                       th:attr="data-soundbox-id=${soundbox.soundBoxId}"
+                    >Delete</a>
+                    <div th:replace="components/modal/delete_sound_box_fragment :: delete_sound_box" ></div>
                 </td>
             </tbody>
         </table>
@@ -58,7 +63,12 @@
                         th:attr="data-user-id=${user.id}"
                     >Edit</a>
                     <div th:replace="components/modal/update_user_modal_frgment :: update_user_modal" ></div>
-                    <a th:href="@{/soundbox/user-handling/delete/{userId} (userId =${user.id})}" class="btn btn-danger">Delete</a>
+                    <a th:href="'#deleteUserModal' + ${user.id}"
+                       class="btn btn-danger"
+                       data-bs-toggle="modal"
+                       th:attr="data-user-id=${user.id}"
+                    >Delete</a>
+                    <div th:replace="components/modal/delete_user_modal_fragment :: delete_user" ></div>
                 </td>
             </tbody>
         </table>

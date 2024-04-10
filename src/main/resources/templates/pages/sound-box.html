@@ -5,9 +5,16 @@
 <body>
 <section layout:fragment="content">
     <div class="container">
+        <h3 class="text-primary">Sound Box</h3>
         <div class="sound-box-page-header">
             <div class="input-search-container">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                <input type="search" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search">
+            </div>
+            <div class="filter-btn-container">
+                <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterSoundBoxes()">
+                    <option selected>ALL</option>
+                    <option th:each="group: ${sound_box_status}" th:value="${group}" th:text="${group}"></option>
+                </select>
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">Add Sound Box</button>
         </div>

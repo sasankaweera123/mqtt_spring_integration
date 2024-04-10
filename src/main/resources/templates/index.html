@@ -8,10 +8,34 @@
 <!--Main Navigation-->
 <div th:replace="components/fragments :: menue"></div>
 
+<!--Optional-->
+<div th:replace="components/fragments :: optional"></div>
+
 <!--content-->
 <section layout:fragment="content" class="m-5 p-5 page-section"></section>
 
 <!--footer-->
 <div th:replace="components/fragments :: footer"></div>
+
+<!-- Alert container -->
+<div id="alert-container" class="alert-container"></div>
+
+<!-- Call the displayAlert function to show alert based on message -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var message = /*[[${message}]]*/ ''; // Retrieve the message from Thymeleaf model
+    displayAlert(message);
+
+    // Function to close the alert with fade-out effect
+    setTimeout(function() {
+        var alertContainer = document.getElementById('alert-container');
+        alertContainer.style.transition = "opacity 1s"; // Transition effect over 1 second
+        alertContainer.style.opacity = "0"; // Fade out by setting opacity to 0
+        setTimeout(function() {
+            alertContainer.parentNode.removeChild(alertContainer);
+        }, 3000); // Remove alert after 3 second
+    }, 4000); // Wait for 4 seconds before starting the fade-out effect
+    /*]]>*/
+</script>
 </body>
 </html>

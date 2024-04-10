@@ -9,7 +9,7 @@
         <h5 class="modal-title" id="updateUserModalLabel">Update User</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body container">
         <form th:action="@{/soundbox/user-handling/update/{userId} (userId =${user.id})}"
               method="post"
               th:object="${user_form}">

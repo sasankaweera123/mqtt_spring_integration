@@ -10,6 +10,7 @@ import com.example.mqtt_backend.service.UsersService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,25 +33,30 @@ public class UserController {
     }
 
     @PostMapping(ResourcePath.LOGIN)
-    public String userLogin(@ModelAttribute UserLoginForm userLoginForm, Model model) {
+    public String userLogin(@ModelAttribute UserLoginForm userLoginForm, RedirectAttributes model) {
         System.out.println(userLoginForm.getPassword());
         String outCome = usersService.UserLogin(userLoginForm.getEmail(), userLoginForm.getPassword());
         System.out.println(outCome);
         return switch (outCome) {
             case ResourcePath.LOGIN_SUCCESS -> ResourcePath.HOME_PAGE_URL;
             case ResourcePath.LOGIN_PASSWORD_INCORRECT -> {
-                model.addAttribute("error", "Password incorrect");
+                model.addFlashAttribute("message", "Failed : Password Incorrect");
                 yield ResourcePath.LOGIN_FAILED;
             }
             case ResourcePath.LOGIN_EMAIL_NOT_FOUND -> {
-                model.addAttribute("error", "Email not found");
+                model.addFlashAttribute("message", "Failed : Email Not Found");
                 yield ResourcePath.LOGIN_FAILED;
             }
             default -> {
-                model.addAttribute("error", "Login Failed");
+                model.addFlashAttribute("message", "Failed : Unknown Error");
                 yield ResourcePath.LOGIN_FAILED;
             }
         };
+    }
+
+    @GetMapping(ResourcePath.LOGOUT)
+    public String logout() {
+        return "redirect:/" + ResourcePath.LOGIN;
     }
 
 
@@ -70,33 +76,49 @@ public class UserController {
     }
 
     @PostMapping(ResourcePath.USER_UPDATE + "/{id}")
-    public String updateUser(@PathVariable long id, @ModelAttribute UpdateUserForm userForm) {
-        LoginUsers user = new LoginUsers();
-        user.setEmail(userForm.getUpdateEmail());
-        user.setUsername(userForm.getUpdateUsername());
-        user.setUserRole(userForm.getUpdateUserRole());
-        user.setPassword(userForm.getUpdatePassword());
-        usersService.updateUser(id,user);
+    public String updateUser(@PathVariable long id, @ModelAttribute UpdateUserForm userForm, RedirectAttributes model) {
+        try {
+            LoginUsers user = new LoginUsers();
+            user.setEmail(userForm.getUpdateEmail());
+            user.setUsername(userForm.getUpdateUsername());
+            user.setUserRole(userForm.getUpdateUserRole());
+            user.setPassword(userForm.getUpdatePassword());
+            usersService.updateUser(id, user);
+            model.addFlashAttribute("message", "Successfully updated user details");
+        }
+        catch (Exception e){
+            model.addFlashAttribute("message", "Failed to update user details");
+        }
         return "redirect:/" + ResourcePath.USERHANDLING;
     }
 
     @GetMapping(ResourcePath.USER_DELETE + "/{id}")
-    public String deleteUser(@PathVariable long id) {
-        usersService.deleteUser(id);
+    public String deleteUser(@PathVariable long id, RedirectAttributes model) {
+        try{
+            usersService.deleteUser(id);
+            model.addFlashAttribute("message", "Successfully deleted user details");
+        }catch (Exception e) {
+            model.addFlashAttribute("message", "Failed to delete user details");
+        }
         return "redirect:/" + ResourcePath.USERHANDLING;
     }
 
     @PostMapping(ResourcePath.USER_ADD)
-    public String addUser(@ModelAttribute NewUserForm newUserForm) {
+    public String addUser(@ModelAttribute NewUserForm newUserForm, RedirectAttributes model) {
         if(!newUserForm.getPassword().equals(newUserForm.getConfirmPassword())){
             throw new IllegalArgumentException("Password and Confirm Password does not match");
         }
-        LoginUsers user = new LoginUsers();
-        user.setEmail(newUserForm.getEmail());
-        user.setUsername(newUserForm.getUsername());
-        user.setUserRole(newUserForm.getUserRole());
-        user.setPassword(newUserForm.getPassword());
-        usersService.addUser(user);
+        try {
+            LoginUsers user = new LoginUsers();
+            user.setEmail(newUserForm.getEmail());
+            user.setUsername(newUserForm.getUsername());
+            user.setUserRole(newUserForm.getUserRole());
+            user.setPassword(newUserForm.getPassword());
+            usersService.addUser(user);
+            model.addFlashAttribute("message", "Successfully added user details");
+        }catch (Exception e){
+            model.addFlashAttribute("message", "Failed to add user details");
+        }
         return "redirect:/" + ResourcePath.USERHANDLING;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.mqtt_backend.entity;
 
+import com.example.mqtt_backend.enumeration.MqttProcess;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,13 +18,15 @@ public class MqttRequest {
     private String topic;
     private String message;
     private LocalDateTime timeStamp;
+    private MqttProcess process;
 
     public MqttRequest() {
     }
 
-    public MqttRequest(String topic, String message, LocalDateTime timeStamp) {
+    public MqttRequest(String topic, String message, LocalDateTime timeStamp, MqttProcess process) {
         this.topic = topic;
         this.message = message;
         this.timeStamp = timeStamp;
+        this.process = process;
     }
 }

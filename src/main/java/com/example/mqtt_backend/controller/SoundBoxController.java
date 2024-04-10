@@ -1,7 +1,7 @@
 package com.example.mqtt_backend.controller;
 
 import com.example.mqtt_backend.entity.SoundBoxDetails;
-import com.example.mqtt_backend.enumeration.Process;
+import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.enumeration.SoundBoxStatus;
 import com.example.mqtt_backend.modal.dto.MqttForm;
 import com.example.mqtt_backend.modal.dto.SoundBoxForm;
@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import com.example.mqtt_backend.constant.ResourcePath;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class SoundBoxController {
         List<String> labels = Stream.of(SoundBoxStatus.values()).map(Enum::name).toList();
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         List<Integer> data = new ArrayList<>();
-        List<Process> processes = Arrays.asList(Process.values());
+        List<MqttProcess> processes = Arrays.asList(MqttProcess.values());
         MqttForm mqttForm = new MqttForm();
         // get the count of each sound box status
         for (SoundBoxStatus status : SoundBoxStatus.values()) {
@@ -57,6 +58,7 @@ public class SoundBoxController {
         model.addAttribute("mqtt_form", mqttForm);
         model.addAttribute("processes", processes);
         model.addAttribute("sound_box_details", soundBoxDetails);
+//        model.addAttribute("message", "dashboard");
 
         return ResourcePath.DASHBOARD_PAGE;
     }
@@ -75,40 +77,51 @@ public class SoundBoxController {
 
 
     @PostMapping(ResourcePath.SOUND_BOX_SAVE)
-    public String saveSoundBox(SoundBoxDetails soundBoxDetails) {
-        System.out.println(soundBoxDetails);
-        soundBoxService.saveSoundBoxDetails(soundBoxDetails);
+    public String saveSoundBox(SoundBoxDetails soundBoxDetails,RedirectAttributes model) {
+        try {
+            soundBoxService.saveSoundBoxDetails(soundBoxDetails);
+            model.addFlashAttribute("message", "Successfully saved sound box details");
+        }catch (Exception e){
+            model.addFlashAttribute("message", "Failed to save sound box details");
+        }
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
     @GetMapping(ResourcePath.SOUND_BOX_DELETE + "/{soundBoxId}")
-    public String deleteSoundBox(@PathVariable("soundBoxId") long id) {
-        System.out.println(id);
-        soundBoxService.deleteSoundBoxDetails(id);
-        System.out.println("Done");
+    public String deleteSoundBox(@PathVariable("soundBoxId") long id, RedirectAttributes model) {
+        try {
+            soundBoxService.deleteSoundBoxDetails(id);
+            model.addFlashAttribute("message", "Successfully deleted sound box details");
+        }catch (Exception e){
+            model.addFlashAttribute("message", "Failed to delete sound box details");
+        }
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
     @PostMapping(ResourcePath.SOUND_BOX_UPDATE + "/{id}")
-    public String updateSoundBox(@PathVariable long id, @ModelAttribute SoundBoxForm soundBoxDetails){
-        System.out.println(soundBoxDetails);
-        SoundBoxDetails soundBox = soundBoxService.getSoundBoxDetails(id);
-        soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
-        soundBox.setSoundBoxStatus(soundBoxDetails.getUpdateStatus());
-        soundBoxService.updateSoundBoxDetails(id, soundBox);
+    public String updateSoundBox(@PathVariable long id, @ModelAttribute SoundBoxForm soundBoxDetails, RedirectAttributes model){
+        try {
+            SoundBoxDetails soundBox = soundBoxService.getSoundBoxDetails(id);
+            soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
+            soundBox.setSoundBoxStatus(soundBoxDetails.getUpdateStatus());
+            soundBoxService.updateSoundBoxDetails(id, soundBox);
+            model.addFlashAttribute("message", "Successfully updated sound box details");
+        }catch (Exception e){
+            model.addFlashAttribute("message", "Failed to update sound box details");
+        }
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
     @PostMapping(ResourcePath.TESTING_MQTT_SEND)
-    public String sendMqttMessage(@ModelAttribute MqttForm mqttForm , Model model){
+    public String sendMqttMessage(@ModelAttribute MqttForm mqttForm , RedirectAttributes model){
         try{
             mqttService.mqttPublishViaPortal(mqttForm.getMessage(),mqttForm.getTopic());
-            model.addAttribute("isSuccess", true);
+            model.addFlashAttribute("message", "Successfully sent message to MQTT broker ,Topic: "+mqttForm.getTopic());
         }catch (Exception e){
             System.out.println("Broker not connected");
+            model.addFlashAttribute("message", "Failed to send message to MQTT broker");
             System.out.println(e.getMessage());
         }
-
         return ResourcePath.HOME_PAGE_URL;
     }
 

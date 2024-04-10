@@ -1,6 +1,7 @@
 package com.example.mqtt_backend.service;
 
 import com.example.mqtt_backend.entity.MqttRequest;
+import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.gateway.MqttGateway;
 import com.example.mqtt_backend.repository.MqttRequestRepository;
 import com.google.gson.Gson;
@@ -30,9 +31,18 @@ public class MqttService {
         mqttRequest.setTopic(jsonObject.get("topic").toString().replace("\"", ""));
         mqttRequest.setMessage(jsonObject.get("message").toString().replace("\"", ""));
         mqttRequest.setTimeStamp(LocalDateTime.now());
-        saveMqttRequest(mqttRequest);
 
-        mqttGateway.sendToMqtt(jsonObject.get("message").toString().replace("\"", ""), jsonObject.get("topic").toString().replace("\"", ""));
+
+        try {
+            mqttGateway.sendToMqtt(jsonObject.get("message").toString().replace("\"", ""), jsonObject.get("topic").toString().replace("\"", ""));
+            mqttRequest.setProcess(MqttProcess.SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mqttRequest.setProcess(MqttProcess.FAILED);
+            throw e;
+        }
+
+        saveMqttRequest(mqttRequest);
         System.out.println(jsonObject.get("topic").toString().replace("\"", ""));
     }
 
@@ -41,13 +51,19 @@ public class MqttService {
     }
 
     public void mqttPublishViaPortal(String topic, String message) {
-
         MqttRequest mqttRequest = new MqttRequest();
         mqttRequest.setTopic(topic);
         mqttRequest.setMessage(message);
         mqttRequest.setTimeStamp(LocalDateTime.now());
+        try{
+            mqttGateway.sendToMqtt(message, topic);
+            mqttRequest.setProcess(MqttProcess.SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mqttRequest.setProcess(MqttProcess.FAILED);
+            throw e;
+        }
         saveMqttRequest(mqttRequest);
 
-        mqttGateway.sendToMqtt(message, topic);
     }
 }

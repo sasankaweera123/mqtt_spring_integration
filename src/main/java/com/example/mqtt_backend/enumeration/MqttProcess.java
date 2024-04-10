@@ -3,14 +3,14 @@ package com.example.mqtt_backend.enumeration;
 import lombok.Getter;
 
 @Getter
-public enum Process {
+public enum MqttProcess {
     SUCCESS("Success"),
     FAILED("Failed"),
     PENDING("Pending");
 
     private final String process;
 
-    Process(String process) {
+    MqttProcess(String process) {
         this.process = process;
     }
 
