@@ -12,4 +12,11 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Handle click on Bootstrap close icon to show full table
+    $('#searchInput').on('input', function() {
+        if ($(this).val() === "") {
+            $('.table tbody tr').show(); // Show all table rows if input is empty
+        }
+    });
 });

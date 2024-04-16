@@ -10,17 +10,15 @@
     <div class="card login-card">
         <div class="card-body m-5">
             <h2 class="text-primary">Login</h2>
-            <form th:action="@{/soundbox/login}" method="post" th:object="${userLoginForm}">
+            <form th:action="@{/soundbox/login}" method="post">
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="text" class="form-control" id="email" placeholder="Enter email" name="email"
-                           th:field="*{email}">
+                    <label for="username">Email:</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter email" name="username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter password"
-                           name="password"
-                           th:field="*{password}">
+                           name="password">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

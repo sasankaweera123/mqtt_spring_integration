@@ -13,6 +13,7 @@ public interface ResourcePath {
     String LOGIN = APP_ROOT + "/login";
     String LOGIN_FAILED = "redirect:/" + LOGIN + "?error";
     String LOGOUT = APP_ROOT + "/logout";
+    String LOGOUT_SUCCESS = "redirect:/" + LOGIN;
     String HOME_PAGE = APP_ROOT + "/home";
     String DASHBOARD = APP_ROOT + "/dashboard";
     String USERHANDLING = APP_ROOT + "/user-handling";

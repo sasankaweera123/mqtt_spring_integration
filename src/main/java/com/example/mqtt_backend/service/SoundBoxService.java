@@ -4,6 +4,8 @@ import com.example.mqtt_backend.constant.ResourcePath;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.repository.SoundBoxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,5 +67,9 @@ public class SoundBoxService {
 
     public int getSoundBoxCount() {
         return soundBoxRepository.findAll().size();
+    }
+
+    public Page<SoundBoxDetails> getSoundBoxDetailsPage(Pageable pageable) {
+        return soundBoxRepository.findAll(pageable);
     }
 }

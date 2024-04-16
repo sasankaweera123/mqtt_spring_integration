@@ -3,7 +3,7 @@
 <body>
 <div th:fragment="sound-box-table" class="soundbox-table card" >
     <div class="card-body m-5 table-responsive">
-        <table class="table">
+        <table class="table" id="soundBoxTable">
             <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -14,7 +14,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="soundbox : ${sound_box_details}" th:data-status="${soundbox.soundBoxStatus}">
+            <tr th:each="soundbox : ${sound_box_details.content}" th:data-status="${soundbox.soundBoxStatus}">
                 <td th:text="${soundbox.soundBoxId}">1</td>
                 <td th:text="${soundbox.serialNumber}">123456</td>
                 <td th:text="${soundbox.topic}">topic</td>
@@ -35,7 +35,15 @@
                 </td>
             </tbody>
         </table>
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center">
+            <li th:each="pageNumber : ${#numbers.sequence(0, sound_box_details.totalPages - 1)}"
+                th:class="${pageNumber == sound_box_details.number ? 'page-item active' : 'page-item'}">
+                <a class="page-link" th:href="@{/soundbox/sound-box(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+            </li>
+        </ul>
     </div>
+
 </div>
 
 <div th:fragment="user-table" class="user-table card" >
@@ -73,6 +81,7 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
 <script>

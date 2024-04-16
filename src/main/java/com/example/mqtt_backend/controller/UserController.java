@@ -32,33 +32,6 @@ public class UserController {
         return ResourcePath.LOGIN_PAGE;
     }
 
-    @PostMapping(ResourcePath.LOGIN)
-    public String userLogin(@ModelAttribute UserLoginForm userLoginForm, RedirectAttributes model) {
-        System.out.println(userLoginForm.getPassword());
-        String outCome = usersService.UserLogin(userLoginForm.getEmail(), userLoginForm.getPassword());
-        System.out.println(outCome);
-        return switch (outCome) {
-            case ResourcePath.LOGIN_SUCCESS -> ResourcePath.HOME_PAGE_URL;
-            case ResourcePath.LOGIN_PASSWORD_INCORRECT -> {
-                model.addFlashAttribute("message", "Failed : Password Incorrect");
-                yield ResourcePath.LOGIN_FAILED;
-            }
-            case ResourcePath.LOGIN_EMAIL_NOT_FOUND -> {
-                model.addFlashAttribute("message", "Failed : Email Not Found");
-                yield ResourcePath.LOGIN_FAILED;
-            }
-            default -> {
-                model.addFlashAttribute("message", "Failed : Unknown Error");
-                yield ResourcePath.LOGIN_FAILED;
-            }
-        };
-    }
-
-    @GetMapping(ResourcePath.LOGOUT)
-    public String logout() {
-        return "redirect:/" + ResourcePath.LOGIN;
-    }
-
 
     @GetMapping(ResourcePath.USERHANDLING)
     public String users(Model model) {

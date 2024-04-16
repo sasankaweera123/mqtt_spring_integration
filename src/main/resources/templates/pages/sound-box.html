@@ -12,7 +12,7 @@
             </div>
             <div class="filter-btn-container">
                 <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterSoundBoxes()">
-                    <option selected>ALL</option>
+                    <option selected >ALL</option>
                     <option th:each="group: ${sound_box_status}" th:value="${group}" th:text="${group}"></option>
                 </select>
             </div>

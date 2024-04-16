@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{index}"
+      layout:decorate="~{index}"
 >
 <body>
 <section layout:fragment="content">
     <div class="container">
+        <div class="page-dashboard-header m-4">
+            <h3 class="text-primary">Dashboard</h3>
+            <h3 class="text-primary"> Hi, [[${login_user.getLoginUserName()}]]</h3>
+        </div>
         <div class="card-container">
             <div class="type-card dashboard-card">
                 <div th:replace="components/chart_fragment"></div>

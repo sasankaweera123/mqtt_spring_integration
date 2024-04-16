@@ -5,14 +5,19 @@ import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.enumeration.SoundBoxStatus;
 import com.example.mqtt_backend.modal.dto.MqttForm;
 import com.example.mqtt_backend.modal.dto.SoundBoxForm;
+import com.example.mqtt_backend.service.CustomUserDetailService;
 import com.example.mqtt_backend.service.MqttService;
 import com.example.mqtt_backend.service.SoundBoxService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import com.example.mqtt_backend.constant.ResourcePath;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +27,15 @@ import java.util.stream.Stream;
 @Controller
 public class SoundBoxController {
 
+    private final CustomUserDetailService customUserDetailService;
+
     private final SoundBoxService soundBoxService;
     private final MqttService mqttService;
 
-    public SoundBoxController(SoundBoxService soundBoxService, MqttService mqttService) {
+    public SoundBoxController(SoundBoxService soundBoxService, MqttService mqttService, CustomUserDetailService customUserDetailService) {
         this.soundBoxService = soundBoxService;
         this.mqttService = mqttService;
+        this.customUserDetailService = customUserDetailService;
     }
 
     @GetMapping("/")
@@ -36,41 +44,50 @@ public class SoundBoxController {
     }
 
     @GetMapping(ResourcePath.DASHBOARD)
-    public String dashboard(Model model) {
+    public String dashboard(Model model, Principal principal){
+
         List<String> labels = Stream.of(SoundBoxStatus.values()).map(Enum::name).toList();
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         List<Integer> data = new ArrayList<>();
         List<MqttProcess> processes = Arrays.asList(MqttProcess.values());
+
         MqttForm mqttForm = new MqttForm();
+
+        UserDetails loginUserDetails = customUserDetailService.loadUserByUsername(principal.getName());
+
+
+
         // get the count of each sound box status
         for (SoundBoxStatus status : SoundBoxStatus.values()) {
             int count = (int) soundBoxDetails.stream().filter(soundBox -> Objects.equals(soundBox.getSoundBoxStatus(), status)).count();
             data.add(count);
         }
 
-        System.out.println(labels);
-        System.out.println(data);
-
         model.addAttribute("count_labels", labels);
         model.addAttribute("count_data", data);
         model.addAttribute("count_title", "Sound Box Dashboard");
-        model.addAttribute("total_sound_boxes", 450);
+        model.addAttribute("total_sound_boxes", soundBoxService.getSoundBoxCount());
         model.addAttribute("mqtt_form", mqttForm);
         model.addAttribute("processes", processes);
         model.addAttribute("sound_box_details", soundBoxDetails);
-//        model.addAttribute("message", "dashboard");
+        model.addAttribute("login_user", loginUserDetails);
+
 
         return ResourcePath.DASHBOARD_PAGE;
     }
 
     @GetMapping(ResourcePath.SOUND_BOX)
-    public String soundBox(Model model) {
+    public String soundBox(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
+        Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size));
         SoundBoxForm soundBoxForm = new SoundBoxForm();
+
         System.out.println(Arrays.toString(SoundBoxStatus.values()));
-        model.addAttribute("sound_box_details", soundBoxDetails);
+
+        model.addAttribute("sound_box_details", soundBoxDetailsPage);
         model.addAttribute("sound_box_form", soundBoxForm);
         model.addAttribute("sound_box_status", SoundBoxStatus.values());
+
         return ResourcePath.SOUND_BOX_PAGE;
     }
 

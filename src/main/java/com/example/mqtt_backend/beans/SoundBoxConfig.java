@@ -20,8 +20,14 @@ public class SoundBoxConfig {
             SoundBoxDetails S3 = new SoundBoxDetails("S3", "topic3", SoundBoxStatus.MAINTENANCE);
             SoundBoxDetails S4 = new SoundBoxDetails("S4", "topic4", SoundBoxStatus.PRODUCTION);
             SoundBoxDetails S5 = new SoundBoxDetails("S5", "topic5", SoundBoxStatus.TESTING);
+            SoundBoxDetails S6 = new SoundBoxDetails("S6", "topic6", SoundBoxStatus.DELIVERED);
+            SoundBoxDetails S7 = new SoundBoxDetails("S7", "topic7", SoundBoxStatus.INSTALLED);
+            SoundBoxDetails S8 = new SoundBoxDetails("S8", "topic8", SoundBoxStatus.MAINTENANCE);
+            SoundBoxDetails S9 = new SoundBoxDetails("S9", "topic9", SoundBoxStatus.PRODUCTION);
+            SoundBoxDetails S10 = new SoundBoxDetails("S10", "topic10", SoundBoxStatus.TESTING);
+            SoundBoxDetails S11 = new SoundBoxDetails("S11", "topic11", SoundBoxStatus.DELIVERED);
 
-            soundBoxRepository.saveAll(List.of(S1, S2, S3, S4, S5));
+            soundBoxRepository.saveAll(List.of(S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11));
         };
     }
 }
