@@ -9,6 +9,11 @@
                 <th scope="col">ID</th>
                 <th scope="col">Serial Number</th>
                 <th scope="col">Mqtt Topic</th>
+                <th scope="col">Merchant Name</th>
+                <th scope="col">Merchant Address</th>
+                <th scope="col">MID</th>
+                <th scope="col">TID</th>
+                <th scope="col">Bank</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
@@ -18,6 +23,11 @@
                 <td th:text="${soundbox.soundBoxId}">1</td>
                 <td th:text="${soundbox.serialNumber}">123456</td>
                 <td th:text="${soundbox.topic}">topic</td>
+                <td th:text="${soundbox.mName}">merchant</td>
+                <td th:text="${soundbox.mAddress}">address</td>
+                <td th:text="${soundbox.mid}">mid</td>
+                <td th:text="${soundbox.tid}">tid</td>
+                <td th:text="${soundbox.bankCode}">bank</td>
                 <td th:text="${soundbox.soundBoxStatus}">Active</td>
                 <td>
                     <a th:href="'#updateSoundBoxModal'+${soundbox.soundBoxId}"

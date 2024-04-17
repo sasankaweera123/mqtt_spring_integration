@@ -8,12 +8,23 @@
         <h3 class="text-primary">Sound Box</h3>
         <div class="sound-box-page-header">
             <div class="input-search-container">
+                <label for="searchInput" class="form-label">Search</label>
                 <input type="search" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search">
             </div>
             <div class="filter-btn-container">
-                <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterSoundBoxes()">
-                    <option selected >ALL</option>
-                    <option th:each="group: ${sound_box_status}" th:value="${group}" th:text="${group}"></option>
+                <label for="filterDropdown" class="form-label">Filter By Status</label>
+                <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterByStatus(this)">
+                    <option th:each="group: ${sound_box_status}"
+                            th:value="${group}" th:text="${group}"
+                    ></option>
+                </select>
+            </div>
+            <div class="filter-btn-container">
+                <label for="bankFilterDropdown" class="form-label">Filter By Bank</label>
+                <select id="bankFilterDropdown" class="form-select" aria-label="Default select" onchange="filterByBank(this)">
+                    <option th:each="group: ${bank_codes}"
+                            th:value="${group}" th:text="${group}"
+                    ></option>
                 </select>
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">Add Sound Box</button>

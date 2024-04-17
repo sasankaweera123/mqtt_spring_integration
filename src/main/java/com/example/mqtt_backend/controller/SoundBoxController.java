@@ -1,13 +1,13 @@
 package com.example.mqtt_backend.controller;
 
 import com.example.mqtt_backend.entity.SoundBoxDetails;
+import com.example.mqtt_backend.enumeration.BankCode;
 import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.enumeration.SoundBoxStatus;
 import com.example.mqtt_backend.modal.dto.MqttForm;
 import com.example.mqtt_backend.modal.dto.MqttReceive;
 import com.example.mqtt_backend.modal.dto.SoundBoxForm;
 import com.example.mqtt_backend.modal.util.LoginUserUtil;
-import com.example.mqtt_backend.service.CustomUserDetailService;
 import com.example.mqtt_backend.service.MqttService;
 import com.example.mqtt_backend.service.SoundBoxService;
 import org.slf4j.Logger;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,15 +98,21 @@ public class SoundBoxController {
      * @return sound box page
      */
     @GetMapping(ResourcePath.SOUND_BOX)
-    public String soundBox(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public String soundBox(Model model,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           @RequestParam(defaultValue = "ALL") String bankCode,
+                           @RequestParam(defaultValue = "ALL") String soundBoxStatus
+                           ) {
         logger.info("load sound box page");
-        Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size));
+        Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size), BankCode.valueOf(bankCode), SoundBoxStatus.valueOf(soundBoxStatus));
         SoundBoxForm soundBoxForm = new SoundBoxForm();
 
         LoginUserUtil.loadLoginUser(model);
         model.addAttribute("sound_box_details", soundBoxDetailsPage);
         model.addAttribute("sound_box_form", soundBoxForm);
         model.addAttribute("sound_box_status", SoundBoxStatus.values());
+        model.addAttribute("bank_codes", BankCode.values());
 
         return ResourcePath.SOUND_BOX_PAGE;
     }
@@ -138,12 +145,19 @@ public class SoundBoxController {
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
+    /**
+     * Load sound box update page
+     * @param model model
+     * @param id sound box id: id of the sound box to update
+     * @return sound box update page
+     */
+
     @PostMapping(ResourcePath.SOUND_BOX_UPDATE + "/{id}")
     public String updateSoundBox(@PathVariable long id, @ModelAttribute SoundBoxForm soundBoxDetails, RedirectAttributes model){
+        System.out.println(soundBoxDetails);
         try {
-            SoundBoxDetails soundBox = soundBoxService.getSoundBoxDetails(id);
-            soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
-            soundBox.setSoundBoxStatus(soundBoxDetails.getUpdateStatus());
+            SoundBoxDetails soundBox = getSoundBoxDetails(soundBoxDetails);
+            System.out.println(soundBoxDetails);
             soundBoxService.updateSoundBoxDetails(id, soundBox);
             logger.warn("Update sound box details");
             model.addFlashAttribute("message", "Successfully updated sound box details");
@@ -152,6 +166,19 @@ public class SoundBoxController {
             model.addFlashAttribute("message", "Failed to update sound box details");
         }
         return "redirect:/" + ResourcePath.SOUND_BOX;
+    }
+
+    private static SoundBoxDetails getSoundBoxDetails(SoundBoxForm soundBoxDetails) {
+        SoundBoxDetails soundBox = new SoundBoxDetails();
+        soundBox.setSerialNumber(soundBoxDetails.getSerialNumber());
+        soundBox.setSoundBoxStatus(soundBoxDetails.getSoundBoxStatus());
+        soundBox.setMName(soundBoxDetails.getMName());
+        soundBox.setMAddress(soundBoxDetails.getMAddress());
+        soundBox.setMid(soundBoxDetails.getMid());
+        soundBox.setTid(soundBoxDetails.getTid());
+        soundBox.setBankCode(soundBoxDetails.getBankCode());
+        soundBox.setDateAdded(LocalDate.parse(soundBoxDetails.getDateAdded()));
+        return soundBox;
     }
 
     /**

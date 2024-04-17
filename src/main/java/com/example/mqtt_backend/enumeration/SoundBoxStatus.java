@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum SoundBoxStatus {
+    ALL("ALL"),
     PRODUCTION("Production"),
     TESTING("Testing"),
     DELIVERED("Delivered"),

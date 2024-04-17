@@ -1,51 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-<div th:fragment="update_sound_box_modal" class="modal fade" th:id="'updateSoundBoxModal' + @{${soundbox.soundBoxId}}" tabindex="-1"
-     aria-labelledby="updateSoundBoxModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateSoundBoxModalLabel">Update Sound Box</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body container">
-        <form th:action="@{/soundbox/sound-box/update/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}"
-              method="post"
-              th:object="${sound_box_form}">
-          <div class="mb-3">
-            <label for="UpdateSerialNumber" class="form-label">Serial Number</label>
-            <input type="text" class="form-control" id="UpdateSerialNumber"
-                   name="UpdateSerialNumber"
-                   required
-                   th:filed="*{updateSerialNumber}"
-                   th:value="@{${soundbox.serialNumber}}"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="previousStatus" class="form-label">Previous Status</label>
-            <input type="text" class="form-control" id="previousStatus"
-                   name="previousStatus"
-                   th:value="@{${soundbox.soundBoxStatus}}"
-                   readonly />
-          </div>
-          <div class="mb-3">
-            <label for="statusGroup" class="form-label">Status</label>
-            <select id="statusGroup" th:field="*{updateStatus}"
-                    class="form-select">
-              <option value="">Select Update Status</option>
-              <option th:each="group: ${sound_box_status}"
-                      th:value="${group}"
-                      th:text="${group} + '-' + ${group == soundbox.soundBoxStatus}"
-                      th:selected="${group == soundbox.soundBoxStatus}"></option>
-            </select>
-          </div>
+<div th:fragment="update_sound_box_modal" class="modal fade" th:id="'updateSoundBoxModal' + @{${soundbox.soundBoxId}}"
+     tabindex="-1"
+     aria-labelledby="updateSoundBoxModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateSoundBoxModalLabel">Update Sound Box</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body container">
+                <form th:action="@{/soundbox/sound-box/update/{soundBoxId} (soundBoxId =${soundbox.soundBoxId})}"
+                      method="post"
+                      th:object="${sound_box_form}">
+                    <div class="mb-3">
+                        <label for="serialNumber" class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" id="serialNumber"
+                               name="serialNumber"
+                               required
+                               th:filed="*{serialNumber}"
+                               th:value="@{${soundbox.serialNumber}}"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="mName" class="form-label">Merchant Name</label>
+                        <input type="text" class="form-control" id="mName"
+                               name="mName"
+                               required
+                               th:filed="*{mName}"
+                               th:value="@{${soundbox.mName}}"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="mAddress" class="form-label">Merchant Address</label>
+                        <input type="text" class="form-control" id="mAddress"
+                               name="mAddress"
+                               required
+                               th:filed="*{mAddress}"
+                               th:value="@{${soundbox.mAddress}}"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="mid" class="form-label">Merchant ID</label>
+                        <input type="text" class="form-control" id="mid"
+                               name="mid"
+                               required
+                               th:filed="*{mid}"
+                               th:value="@{${soundbox.mid}}"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="tid" class="form-label">Terminal ID</label>
+                        <input type="text" class="form-control" id="tid"
+                               name="tid"
+                               required
+                               th:filed="*{tid}"
+                               th:value="@{${soundbox.tid}}"
+                        />
+                        </div>
+                    <div class="mb-3">
+                        <label for="dateAdded" class="form-label">Date Added</label>
+                        <input type="date" class="form-control" id="dateAdded"
+                               name="dateAdded"
+                               required
+                               th:filed="*{dateAdded}"
+                               th:value="@{${soundbox.dateAdded}}"
+                               />
+                    </div>
+                    <div class="mb-3">
+                        <label for="bankCode" class="form-label">Bank: <span th:text="${soundbox.bankCode}">bank</span></label>
+                        <select id="bankCode" th:field="*{bankCode}"
+                                class="form-select">
+                            <option value="">Select Bank</option>
+                            <option th:each="bank: ${bank_codes}"
+                                    th:value="${bank}"
+                                    th:text="${bank}"
+                                    ></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="previousStatus" class="form-label">Previous Status</label>
+                        <input type="text" class="form-control" id="previousStatus"
+                               name="previousStatus"
+                               th:value="@{${soundbox.soundBoxStatus}}"
+                               disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="statusGroup" class="form-label">Status</label>
+                        <select id="statusGroup" th:field="*{soundBoxStatus}"
+                                class="form-select">
+                            <option value="">Select Update Status</option>
+                            <option th:each="group: ${sound_box_status}"
+                                    th:value="${group}"
+                                    th:text="${group} + '-' + ${group == soundbox.soundBoxStatus}"
+                                    th:selected="${group == soundbox.soundBoxStatus}"></option>
+                        </select>
+                    </div>
 
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-      </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>

@@ -34,3 +34,23 @@ function changeRowLimit(select){
         window.location.href = '/soundbox/sound-box?page=0&size=' + selectedValue;
     }
 }
+
+function filterByStatus(select){
+    var selectedValue = select.value;
+    window.location.href = '/soundbox/sound-box?page=0&size=10&soundBoxStatus=' + selectedValue;
+}
+
+function filterByBank(select){
+    var selectedValue = select.value;
+    window.location.href = '/soundbox/sound-box?page=0&size=10&bankCode=' + selectedValue;
+
+}
+
+window.onload = function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var bankCode = urlParams.get('bankCode');
+    if (bankCode) {
+        var bankDropdown = document.getElementById('bankFilterDropdown');
+        bankDropdown.value = bankCode;
+    }
+};
