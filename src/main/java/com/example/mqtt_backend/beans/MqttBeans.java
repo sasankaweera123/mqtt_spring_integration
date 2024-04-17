@@ -26,15 +26,16 @@ public class MqttBeans {
     @Autowired
     private MqttService mqttService;
 
+    /**
+     * MQTT Client Factory
+     * @return MqttPahoClientFactory
+     */
     public MqttPahoClientFactory mqttClientFactory() {
 
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
-
         options.setServerURIs(new String[] {ResourcePath.MQTT_BROKER_CONNECTION});
-
         options.setCleanSession(true);
-
         factory.setConnectionOptions(options);
 
         return factory;
@@ -45,6 +46,10 @@ public class MqttBeans {
         return new DirectChannel();
     }
 
+    /**
+     * MQTT Inbound
+     * @return MessageProducer
+     */
     @Bean
     public MessageProducer inbound() {
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter("serverIn",
@@ -58,6 +63,10 @@ public class MqttBeans {
         return adapter;
     }
 
+    /**
+     * MQTT Inbound Handler
+     * @return MessageHandler
+     */
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
     public MessageHandler handler() {
@@ -75,6 +84,10 @@ public class MqttBeans {
         return new DirectChannel();
     }
 
+    /**
+     * MQTT Outbound
+     * @return MessageHandler
+     */
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound() {

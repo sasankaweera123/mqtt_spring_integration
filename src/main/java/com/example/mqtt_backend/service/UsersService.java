@@ -24,10 +24,19 @@ public class UsersService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Check if user exist
+     * @param email The email of the user
+     * @return true if user exist, false otherwise
+     */
     public boolean isUserExist(String email) {
         return loginUsersRepository.findByEmail(email) != null;
     }
 
+    /**
+     * Add user
+     * @param loginUsers The user to add
+     */
     public void addUser(LoginUsers loginUsers) {
         if(isUserExist(loginUsers.getEmail())) {
             logger.warn("User already exist");
@@ -38,6 +47,10 @@ public class UsersService {
         logger.info("user saved");
     }
 
+    /**
+     * Get all users
+     * @return List of all users
+     */
     public List<LoginUsers> getAllUsers() {
         return loginUsersRepository.findAll();
     }
@@ -69,6 +82,10 @@ public class UsersService {
         logger.info("User updated");
     }
 
+    /**
+     * Delete user
+     * @param id The id of the user to delete
+     */
     public void deleteUser(long id) {
         if(loginUsersRepository.existsById(id)) {
             loginUsersRepository.deleteById(id);
@@ -76,6 +93,13 @@ public class UsersService {
         }
     }
 
+    /**
+     * TODO: Check if function is used or remove
+     * User login
+     * @param email The email of the user
+     * @param password The password of the user
+     * @return The login status
+     */
     public String UserLogin(String email, String password) {
         LoginUsers user = loginUsersRepository.findByEmail(email);
         if (user != null) {

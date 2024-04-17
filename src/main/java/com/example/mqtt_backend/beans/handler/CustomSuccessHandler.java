@@ -15,6 +15,14 @@ import java.io.IOException;
 @Service
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
+    /**
+     * On Authentication Success
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @param authentication Authentication
+     * @throws IOException IOException: if an input or output exception occurs
+     * @throws ServletException ServletException: if a servlet exception occurs
+     */
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

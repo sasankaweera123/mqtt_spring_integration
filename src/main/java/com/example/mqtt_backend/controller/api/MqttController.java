@@ -29,6 +29,11 @@ public class MqttController {
         this.mqttService = mqttService;
     }
 
+    /**
+     * Send message to MQTT broker
+     * @param message message to send
+     * @return response entity
+     */
     @PostMapping("/send")
     public ResponseEntity<Response> sendMessage(@RequestBody String message) {
         try {

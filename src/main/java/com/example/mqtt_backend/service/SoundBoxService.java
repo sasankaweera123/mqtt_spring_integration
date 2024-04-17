@@ -32,6 +32,10 @@ public class SoundBoxService {
         return soundBoxRepository.findAll();
     }
 
+    /**
+     * Add SoundBoxDetails
+     * @param soundBoxDetails The SoundBoxDetails to add
+     */
     public void saveSoundBoxDetails(SoundBoxDetails soundBoxDetails) {
         if(soundBoxDetails == null) {
             logger.warn("SoundBoxDetails is null : SoundBoxDetails not saved");
@@ -53,6 +57,11 @@ public class SoundBoxService {
         }
     }
 
+    /**
+     * Update SoundBoxDetails
+     * @param id The id of the SoundBoxDetails to update
+     * @param soundBoxDetails The SoundBoxDetails to update
+     */
     public void updateSoundBoxDetails(Long id, SoundBoxDetails soundBoxDetails) {
         SoundBoxDetails soundBox = soundBoxRepository.findById(id).orElse(null);
         if(soundBox == null) {
@@ -78,6 +87,11 @@ public class SoundBoxService {
         return soundBoxRepository.findAll().size();
     }
 
+    /**
+     * Get SoundBoxDetails page
+     * @param pageable The pageable to get page
+     * @return The SoundBoxDetails page
+     */
     public Page<SoundBoxDetails> getSoundBoxDetailsPage(Pageable pageable) {
         return soundBoxRepository.findAll(pageable);
     }

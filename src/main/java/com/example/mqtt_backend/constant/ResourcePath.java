@@ -25,6 +25,7 @@ public interface ResourcePath {
     String SOUND_BOX_UPDATE = SOUND_BOX + "/update";
     String SOUND_BOX_DELETE = SOUND_BOX + "/delete";
     String TESTING_MQTT_SEND = "soundbox/testing/mqtt/send";
+    String TESTING_MQTT_RECEIVE = "soundbox/testing/mqtt/receive";
 
     // User Handling
 

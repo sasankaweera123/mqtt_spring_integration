@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -122,6 +121,7 @@ public class MqttService {
         } catch (Exception e){
             logger.error(e.getMessage());
             logger.error("Failed to update mqtt message status in database");
+            throw new IllegalArgumentException("Mqtt request not found");
         }
     }
 

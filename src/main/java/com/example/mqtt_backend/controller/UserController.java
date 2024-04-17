@@ -29,6 +29,11 @@ public class UserController {
         this.usersService = usersService;
     }
 
+    /**
+     * Load login page
+     * @param model model
+     * @return login page
+     */
     @GetMapping(ResourcePath.LOGIN)
     public String login(Model model) {
         logger.info("load login page");
@@ -37,7 +42,11 @@ public class UserController {
         return ResourcePath.LOGIN_PAGE;
     }
 
-
+    /**
+     * Load user handling page
+     * @param model model
+     * @return user handling page
+     */
     @GetMapping(ResourcePath.USERHANDLING)
     public String users(Model model) {
         logger.info("load user handling page");

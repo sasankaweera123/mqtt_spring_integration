@@ -2,26 +2,53 @@
 <html lang="en">
 <body>
 <div th:fragment="mqtt-testing">
-  <div class="row card mqtt-card">
-    <div class="col-md-12 card-body">
-      <h5 class="card-title">MQTT Testing</h5>
-      <form th:action="@{/soundbox/testing/mqtt/send}" method="post" th:object="${mqtt_form}">
-        <div class="form-group">
-          <label for="soundBoxId">Select Serial Number</label>
-          <select class="form-select" id="soundBoxId" name="soundBoxId" th:field="*{topic}" required>
-            <option value="">Select Sound Box</option>
-            <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.topic}"
-                    th:text="${soundbox.serialNumber}"></option>
-          </select>
+    <div class="row card mqtt-card">
+        <div class="col-md-12 card-body">
+            <h5 class="card-title">MQTT Testing</h5>
+            <form th:action="@{/soundbox/testing/mqtt/send}" method="post" th:object="${mqtt_form}">
+                <div class="form-group">
+                    <label for="soundBoxId">Select Serial Number</label>
+                    <select class="form-select" id="soundBoxId" name="soundBoxId" th:field="*{topic}" required>
+                        <option value="">Select Sound Box</option>
+                        <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.topic}"
+                                th:text="${soundbox.serialNumber}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="soundBoxMessage">Message</label>
+                    <input type="text" class="form-control" id="soundBoxMessage" name="soundBoxMessage"
+                           th:field="*{message}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
         </div>
-        <div class="form-group">
-          <label for="soundBoxMessage">Message</label>
-          <input type="text" class="form-control" id="soundBoxMessage" name="soundBoxMessage" th:field="*{message}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Send</button>
-      </form>
     </div>
-  </div>
+</div>
+<div th:fragment="mqtt-receive-testing" class="my-5">
+    <div class="row card mqtt-card">
+        <div class="col-md-12 card-body">
+            <h5 class="card-title">MQTT Receive Testing</h5>
+            <form th:action="@{/soundbox/testing/mqtt/receive}" method="post" th:object="${mqtt_receive}">
+                <div class="form-group">
+                    <label for="soundBoxTopic">Select Serial Number</label>
+                    <select class="form-select" id="soundBoxTopic" name="soundBoxId" th:field="*{topic}" required>
+                        <option value="">Select Sound Box</option>
+                        <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.topic}"
+                                th:text="${soundbox.serialNumber}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="referenceId">Message</label>
+                    <select class="form-select" id="referenceId" name="referenceId" th:field="*{referenceId}" required>
+                        <option value="0">Select Reference Id</option>
+                        <option th:each="soundbox : ${sound_box_details}" th:value="${soundbox.soundBoxId}"
+                                th:text="${soundbox.soundBoxId}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Receive</button>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

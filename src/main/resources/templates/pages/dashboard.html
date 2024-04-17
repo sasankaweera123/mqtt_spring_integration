@@ -14,7 +14,8 @@
                 <div th:replace="components/chart_fragment"></div>
             </div>
             <div class="testing-card dashboard-card">
-                <div th:replace="components/mqtt_testing_fragment::mqtt-testing"></div>
+                <div th:replace="components/mqtt_testing_fragment :: mqtt-testing" ></div>
+                <div th:replace="components/mqtt_testing_fragment :: mqtt-receive-testing" ></div>
             </div>
         </div>
     </div>

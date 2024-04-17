@@ -3,8 +3,8 @@ package com.example.mqtt_backend.controller;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.enumeration.SoundBoxStatus;
-import com.example.mqtt_backend.enumeration.UserRole;
 import com.example.mqtt_backend.modal.dto.MqttForm;
+import com.example.mqtt_backend.modal.dto.MqttReceive;
 import com.example.mqtt_backend.modal.dto.SoundBoxForm;
 import com.example.mqtt_backend.modal.util.LoginUserUtil;
 import com.example.mqtt_backend.service.CustomUserDetailService;
@@ -14,14 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import com.example.mqtt_backend.constant.ResourcePath;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,26 +30,33 @@ import java.util.stream.Stream;
 @Controller
 public class SoundBoxController {
 
-    private final CustomUserDetailService customUserDetailService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final SoundBoxService soundBoxService;
     private final MqttService mqttService;
 
-    public SoundBoxController(SoundBoxService soundBoxService, MqttService mqttService, CustomUserDetailService customUserDetailService) {
+    public SoundBoxController(SoundBoxService soundBoxService, MqttService mqttService) {
         this.soundBoxService = soundBoxService;
         this.mqttService = mqttService;
-        this.customUserDetailService = customUserDetailService;
     }
 
+    /**
+     * Redirect to Dashboard page
+     * @return dashboard page
+     */
     @GetMapping("/")
     public String home() {
         logger.info("load home page");
         return ResourcePath.HOME_PAGE_URL;
     }
 
+    /**
+     * Load dashboard page
+     * @param model model
+     * @return dashboard page
+     */
     @GetMapping(ResourcePath.DASHBOARD)
-    public String dashboard(Model model, Principal principal){
+    public String dashboard(Model model){
 
         logger.info("load dashboard page");
 
@@ -60,6 +66,7 @@ public class SoundBoxController {
         List<MqttProcess> processes = Arrays.asList(MqttProcess.values());
 
         MqttForm mqttForm = new MqttForm();
+        MqttReceive mqttReceive = new MqttReceive();
 
         // get the count of each sound box status
         for (SoundBoxStatus status : SoundBoxStatus.values()) {
@@ -74,6 +81,7 @@ public class SoundBoxController {
         model.addAttribute("count_title", "Sound Box Dashboard");
         model.addAttribute("total_sound_boxes", soundBoxService.getSoundBoxCount());
         model.addAttribute("mqtt_form", mqttForm);
+        model.addAttribute("mqtt_receive", mqttReceive);
         model.addAttribute("processes", processes);
         model.addAttribute("sound_box_details", soundBoxDetails);
 
@@ -81,10 +89,16 @@ public class SoundBoxController {
         return ResourcePath.DASHBOARD_PAGE;
     }
 
+    /**
+     * Load sound box page
+     * @param model model
+     * @param page page number: page number to load
+     * @param size page size: number of records per page
+     * @return sound box page
+     */
     @GetMapping(ResourcePath.SOUND_BOX)
     public String soundBox(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         logger.info("load sound box page");
-        List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size));
         SoundBoxForm soundBoxForm = new SoundBoxForm();
 
@@ -140,6 +154,11 @@ public class SoundBoxController {
         return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
+    /**
+     * MQTT Testing Component: Send message to MQTT broker via portal
+     * @param model model
+     * @return dashboard page
+     */
     @PostMapping(ResourcePath.TESTING_MQTT_SEND)
     public String sendMqttMessage(@ModelAttribute MqttForm mqttForm , RedirectAttributes model){
         try{
@@ -149,6 +168,20 @@ public class SoundBoxController {
         }catch (Exception e){
             logger.error("Failed to send message to MQTT broker");
             model.addFlashAttribute("message", "Failed to send message to MQTT broker");
+        }
+        return ResourcePath.HOME_PAGE_URL;
+    }
+
+    @PostMapping(ResourcePath.TESTING_MQTT_RECEIVE)
+    public String receiveMqttMessage(@ModelAttribute MqttReceive mqttReceive, RedirectAttributes model){
+        String message = mqttReceive.getTopic() + " | " + mqttReceive.getReferenceId();
+        try{
+            mqttService.mqttMessageReceived(message);
+            logger.warn("Receive message from MQTT broker");
+            model.addFlashAttribute("message", "Successfully received message from MQTT broker");
+        }catch (Exception e){
+            logger.error("Failed to receive message from MQTT broker");
+            model.addFlashAttribute("message", "Failed to receive message from MQTT broker");
         }
         return ResourcePath.HOME_PAGE_URL;
     }
