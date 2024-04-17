@@ -112,3 +112,24 @@
 .login-card form .form-group{
     margin: 1rem 0;
 }
+
+.user-page-filter{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.soundbox-pagination{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.soundbox-pagination .row-limit{
+    margin-bottom: 1rem;
+}
+
+footer .container{
+    text-align: center;
+}

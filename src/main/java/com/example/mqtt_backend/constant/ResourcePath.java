@@ -3,6 +3,8 @@ package com.example.mqtt_backend.constant;
 public interface ResourcePath {
 
     String SOUNDBOX_SERIAL_HEADER = "Aiken-S";
+    String MQTT_BROKER_CONNECTION = "tcp://124.43.65.114:1883";
+    String MQTT_COMMON_TOPIC = "myTopic";
 
     // Rest API
     String BASE_URL = "/api/v1";

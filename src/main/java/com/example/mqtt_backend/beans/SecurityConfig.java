@@ -34,11 +34,9 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        a->a .requestMatchers(ResourcePath.DASHBOARD, ResourcePath.SOUND_BOX,ResourcePath.USERHANDLING)
-                                .hasAuthority(UserRole.ADMIN.name())
-                                .requestMatchers(ResourcePath.DASHBOARD,ResourcePath.SOUND_BOX)
-                                .hasAuthority(UserRole.BANKUSER.name())
+                .authorizeHttpRequests(a->a
+                        .requestMatchers("/"+ResourcePath.DASHBOARD, "/"+ResourcePath.SOUND_BOX).hasAnyAuthority(UserRole.ADMIN.name(),UserRole.BANKUSER.name())
+                                .requestMatchers("/"+ResourcePath.USERHANDLING).hasAuthority(UserRole.ADMIN.name())
                                 .requestMatchers(
                                 "/css/**",
                                 "/js/**",

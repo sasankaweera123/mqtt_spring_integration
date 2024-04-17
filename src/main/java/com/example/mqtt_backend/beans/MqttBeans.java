@@ -1,6 +1,9 @@
 package com.example.mqtt_backend.beans;
 
+import com.example.mqtt_backend.constant.ResourcePath;
+import com.example.mqtt_backend.service.MqttService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -20,12 +23,16 @@ import java.util.Objects;
 @Configuration
 public class MqttBeans {
 
+    @Autowired
+    private MqttService mqttService;
+
     public MqttPahoClientFactory mqttClientFactory() {
 
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
 
-        options.setServerURIs(new String[] { "tcp://localhost:1883" });
+        options.setServerURIs(new String[] {ResourcePath.MQTT_BROKER_CONNECTION});
+
         options.setCleanSession(true);
 
         factory.setConnectionOptions(options);
@@ -56,8 +63,8 @@ public class MqttBeans {
     public MessageHandler handler() {
         return message -> {
             String topic = Objects.requireNonNull(message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC)).toString();
-            if(topic.equals("myTopic")){
-                System.out.println("This is the Topic");
+            if(topic.equals(ResourcePath.MQTT_COMMON_TOPIC)){
+                mqttService.mqttMessageReceived(message.getPayload().toString());
             }
             System.out.println(message.getPayload());
         };

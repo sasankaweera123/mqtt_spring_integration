@@ -3,11 +3,15 @@ package com.example.mqtt_backend.controller;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.enumeration.MqttProcess;
 import com.example.mqtt_backend.enumeration.SoundBoxStatus;
+import com.example.mqtt_backend.enumeration.UserRole;
 import com.example.mqtt_backend.modal.dto.MqttForm;
 import com.example.mqtt_backend.modal.dto.SoundBoxForm;
+import com.example.mqtt_backend.modal.util.LoginUserUtil;
 import com.example.mqtt_backend.service.CustomUserDetailService;
 import com.example.mqtt_backend.service.MqttService;
 import com.example.mqtt_backend.service.SoundBoxService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +32,7 @@ import java.util.stream.Stream;
 public class SoundBoxController {
 
     private final CustomUserDetailService customUserDetailService;
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final SoundBoxService soundBoxService;
     private final MqttService mqttService;
@@ -40,11 +45,14 @@ public class SoundBoxController {
 
     @GetMapping("/")
     public String home() {
+        logger.info("load home page");
         return ResourcePath.HOME_PAGE_URL;
     }
 
     @GetMapping(ResourcePath.DASHBOARD)
     public String dashboard(Model model, Principal principal){
+
+        logger.info("load dashboard page");
 
         List<String> labels = Stream.of(SoundBoxStatus.values()).map(Enum::name).toList();
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
@@ -53,15 +61,13 @@ public class SoundBoxController {
 
         MqttForm mqttForm = new MqttForm();
 
-        UserDetails loginUserDetails = customUserDetailService.loadUserByUsername(principal.getName());
-
-
-
         // get the count of each sound box status
         for (SoundBoxStatus status : SoundBoxStatus.values()) {
             int count = (int) soundBoxDetails.stream().filter(soundBox -> Objects.equals(soundBox.getSoundBoxStatus(), status)).count();
             data.add(count);
         }
+        logger.info("Load login user");
+        LoginUserUtil.loadLoginUser(model);
 
         model.addAttribute("count_labels", labels);
         model.addAttribute("count_data", data);
@@ -70,7 +76,6 @@ public class SoundBoxController {
         model.addAttribute("mqtt_form", mqttForm);
         model.addAttribute("processes", processes);
         model.addAttribute("sound_box_details", soundBoxDetails);
-        model.addAttribute("login_user", loginUserDetails);
 
 
         return ResourcePath.DASHBOARD_PAGE;
@@ -78,12 +83,12 @@ public class SoundBoxController {
 
     @GetMapping(ResourcePath.SOUND_BOX)
     public String soundBox(Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        logger.info("load sound box page");
         List<SoundBoxDetails> soundBoxDetails = soundBoxService.getAllSoundBoxDetails();
         Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size));
         SoundBoxForm soundBoxForm = new SoundBoxForm();
 
-        System.out.println(Arrays.toString(SoundBoxStatus.values()));
-
+        LoginUserUtil.loadLoginUser(model);
         model.addAttribute("sound_box_details", soundBoxDetailsPage);
         model.addAttribute("sound_box_form", soundBoxForm);
         model.addAttribute("sound_box_status", SoundBoxStatus.values());
@@ -97,8 +102,10 @@ public class SoundBoxController {
     public String saveSoundBox(SoundBoxDetails soundBoxDetails,RedirectAttributes model) {
         try {
             soundBoxService.saveSoundBoxDetails(soundBoxDetails);
+            logger.warn("Save sound box details");
             model.addFlashAttribute("message", "Successfully saved sound box details");
         }catch (Exception e){
+            logger.error("Failed to save sound box details");
             model.addFlashAttribute("message", "Failed to save sound box details");
         }
         return "redirect:/" + ResourcePath.SOUND_BOX;
@@ -108,8 +115,10 @@ public class SoundBoxController {
     public String deleteSoundBox(@PathVariable("soundBoxId") long id, RedirectAttributes model) {
         try {
             soundBoxService.deleteSoundBoxDetails(id);
+            logger.warn("Delete sound box details");
             model.addFlashAttribute("message", "Successfully deleted sound box details");
         }catch (Exception e){
+            logger.error("Failed to delete sound box details");
             model.addFlashAttribute("message", "Failed to delete sound box details");
         }
         return "redirect:/" + ResourcePath.SOUND_BOX;
@@ -122,8 +131,10 @@ public class SoundBoxController {
             soundBox.setSerialNumber(soundBoxDetails.getUpdateSerialNumber());
             soundBox.setSoundBoxStatus(soundBoxDetails.getUpdateStatus());
             soundBoxService.updateSoundBoxDetails(id, soundBox);
+            logger.warn("Update sound box details");
             model.addFlashAttribute("message", "Successfully updated sound box details");
         }catch (Exception e){
+            logger.error("Failed to update sound box details");
             model.addFlashAttribute("message", "Failed to update sound box details");
         }
         return "redirect:/" + ResourcePath.SOUND_BOX;
@@ -132,12 +143,12 @@ public class SoundBoxController {
     @PostMapping(ResourcePath.TESTING_MQTT_SEND)
     public String sendMqttMessage(@ModelAttribute MqttForm mqttForm , RedirectAttributes model){
         try{
-            mqttService.mqttPublishViaPortal(mqttForm.getMessage(),mqttForm.getTopic());
+            mqttService.mqttPublishViaPortal(mqttForm.getTopic(),mqttForm.getMessage());
+            logger.warn("Send message to MQTT broker");
             model.addFlashAttribute("message", "Successfully sent message to MQTT broker ,Topic: "+mqttForm.getTopic());
         }catch (Exception e){
-            System.out.println("Broker not connected");
+            logger.error("Failed to send message to MQTT broker");
             model.addFlashAttribute("message", "Failed to send message to MQTT broker");
-            System.out.println(e.getMessage());
         }
         return ResourcePath.HOME_PAGE_URL;
     }

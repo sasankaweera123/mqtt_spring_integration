@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="sound-box-table" class="soundbox-table card" >
+<div th:fragment="sound-box-table" class="soundbox-table card">
     <div class="card-body m-5 table-responsive">
         <table class="table" id="soundBoxTable">
             <thead>
@@ -20,35 +20,60 @@
                 <td th:text="${soundbox.topic}">topic</td>
                 <td th:text="${soundbox.soundBoxStatus}">Active</td>
                 <td>
-                    <a  th:href="'#updateSoundBoxModal'+${soundbox.soundBoxId}"
-                            class="btn btn-primary edit-btn"
-                            data-bs-toggle="modal"
-                        th:attr="data-soundbox-id=${soundbox.soundBoxId}"
+                    <a th:href="'#updateSoundBoxModal'+${soundbox.soundBoxId}"
+                       class="btn btn-primary edit-btn"
+                       data-bs-toggle="modal"
+                       th:attr="data-soundbox-id=${soundbox.soundBoxId}"
                     >Edit</a>
-                    <div th:replace="components/modal/update_sound_box_modal_fragment :: update_sound_box_modal" ></div>
+                    <div th:replace="components/modal/update_sound_box_modal_fragment :: update_sound_box_modal"></div>
                     <a th:href="'#deleteSoundBoxModal' + ${soundbox.soundBoxId}"
                        class="btn btn-danger"
                        data-bs-toggle="modal"
                        th:attr="data-soundbox-id=${soundbox.soundBoxId}"
                     >Delete</a>
-                    <div th:replace="components/modal/delete_sound_box_fragment :: delete_sound_box" ></div>
+                    <div th:replace="components/modal/delete_sound_box_fragment :: delete_sound_box"></div>
                 </td>
             </tbody>
         </table>
         <!-- Pagination -->
-        <ul class="pagination justify-content-center">
-            <li th:each="pageNumber : ${#numbers.sequence(0, sound_box_details.totalPages - 1)}"
-                th:class="${pageNumber == sound_box_details.number ? 'page-item active' : 'page-item'}">
-                <a class="page-link" th:href="@{/soundbox/sound-box(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
-            </li>
-        </ul>
+        <div class="soundbox-pagination">
+            <div class="row-limit">
+                <label for="rowLimit" class="form-label"></label>
+                <select class="form-select" id="rowLimit" onchange="changeRowLimit(this)">
+                    <option value="ALL" th:selected="${sound_box_details.size == 0}">All</option>
+                    <option value="10" th:selected="${sound_box_details.size == 10}">10</option>
+                    <option value="50" th:selected="${sound_box_details.size == 50}">50</option>
+                    <option value="100" th:selected="${sound_box_details.size == 100}">100</option>
+                </select>
+            </div>
+            <div class="page-numbers">
+                <ul class="pagination justify-content-center">
+                    <li th:class="page-item">
+                        <a class="page-link" th:href="@{/soundbox/sound-box(page=0)}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(0, sound_box_details.totalPages - 1)}"
+                        th:class="${pageNumber == sound_box_details.number ? 'page-item active' : 'page-item'}">
+                        <a class="page-link" th:href="@{/soundbox/sound-box(page=${pageNumber})}"
+                           th:text="${pageNumber + 1}"></a>
+                    </li>
+                    <li th:class="page-item">
+                        <a class="page-link" th:href="@{/soundbox/sound-box(page=${sound_box_details.totalPages - 1})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                </ul>
+            </div>
+
+        </div>
     </div>
 
 </div>
 
-<div th:fragment="user-table" class="user-table card" >
+<div th:fragment="user-table" class="user-table card">
     <div class="card-body m-5 table-responsive">
-        <table class="table">
+        <table class="table" id="userTable">
             <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -59,24 +84,24 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${user_details}">
+            <tr th:each="user : ${user_details}" th:data-role="${user.userRole}">
                 <td th:text="${user.id}">1</td>
                 <td th:text="${user.username}">admin</td>
                 <td th:text="${user.email}">admin@mail.com</td>
                 <td th:text="${user.userRole}">Admin
                 <td>
-                    <a  th:href="'#updateUserModal'+${user.id}"
-                            class="btn btn-primary edit-btn"
-                            data-bs-toggle="modal"
-                        th:attr="data-user-id=${user.id}"
+                    <a th:href="'#updateUserModal'+${user.id}"
+                       class="btn btn-primary edit-btn"
+                       data-bs-toggle="modal"
+                       th:attr="data-user-id=${user.id}"
                     >Edit</a>
-                    <div th:replace="components/modal/update_user_modal_frgment :: update_user_modal" ></div>
+                    <div th:replace="components/modal/update_user_modal_frgment :: update_user_modal"></div>
                     <a th:href="'#deleteUserModal' + ${user.id}"
                        class="btn btn-danger"
                        data-bs-toggle="modal"
                        th:attr="data-user-id=${user.id}"
                     >Delete</a>
-                    <div th:replace="components/modal/delete_user_modal_fragment :: delete_user" ></div>
+                    <div th:replace="components/modal/delete_user_modal_fragment :: delete_user"></div>
                 </td>
             </tbody>
         </table>

@@ -3,6 +3,8 @@ package com.example.mqtt_backend.service;
 import com.example.mqtt_backend.constant.ResourcePath;
 import com.example.mqtt_backend.entity.SoundBoxDetails;
 import com.example.mqtt_backend.repository.SoundBoxRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class SoundBoxService {
+
+    private final Logger logger = LoggerFactory.getLogger(UsersService.class);
 
     private final SoundBoxRepository soundBoxRepository;
 
@@ -30,10 +34,12 @@ public class SoundBoxService {
 
     public void saveSoundBoxDetails(SoundBoxDetails soundBoxDetails) {
         if(soundBoxDetails == null) {
+            logger.warn("SoundBoxDetails is null : SoundBoxDetails not saved");
             throw new IllegalArgumentException("SoundBoxDetails is null");
         }
         soundBoxDetails.setTopic(ResourcePath.SOUNDBOX_SERIAL_HEADER + soundBoxDetails.getSerialNumber());
         soundBoxRepository.save(soundBoxDetails);
+        logger.info("SoundBoxDetails saved");
     }
 
     public SoundBoxDetails getSoundBoxDetails(Long id) {
@@ -43,15 +49,18 @@ public class SoundBoxService {
     public void deleteSoundBoxDetails(Long id) {
         if(isSoundBoxDetailsExist(id)) {
             soundBoxRepository.deleteById(id);
+            logger.info("SoundBoxDetails deleted");
         }
     }
 
     public void updateSoundBoxDetails(Long id, SoundBoxDetails soundBoxDetails) {
         SoundBoxDetails soundBox = soundBoxRepository.findById(id).orElse(null);
         if(soundBox == null) {
+            logger.warn("SoundBoxDetails not found");
             throw new IllegalArgumentException("SoundBoxDetails not found");
         }
         if(soundBoxDetails == null) {
+            logger.warn("SoundBoxDetails is null : SoundBoxDetails not updated");
             throw new IllegalArgumentException("SoundBoxDetails is null");
         }
         if(!soundBoxDetails.getSerialNumber().isEmpty() && !soundBoxDetails.getSerialNumber().equals(soundBox.getSerialNumber())){
@@ -62,7 +71,7 @@ public class SoundBoxService {
             soundBox.setSoundBoxStatus(soundBoxDetails.getSoundBoxStatus());
         }
         soundBoxRepository.save(soundBox);
-
+        logger.info("SoundBoxDetails updated");
     }
 
     public int getSoundBoxCount() {

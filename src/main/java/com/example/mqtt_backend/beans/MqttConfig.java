@@ -15,7 +15,7 @@ public class MqttConfig {
     @Bean
     CommandLineRunner mqttCommandLineRunner(MqttRequestRepository mqttRequestRepository){
         return args -> {
-            MqttRequest mqttRequest = new MqttRequest("topic", "message", LocalDateTime.now(), MqttProcess.SUCCESS);
+            MqttRequest mqttRequest = new MqttRequest("topic", "message", 0L, LocalDateTime.now(), MqttProcess.SUCCESS);
             mqttRequestRepository.save(mqttRequest);
         };
     }

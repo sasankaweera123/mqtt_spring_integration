@@ -9,6 +9,17 @@
             <h4 class="text-primary">User Handling</h4>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
         </div>
+        <div class="user-page-filter my-5">
+            <div class="input-search-container">
+                <input type="search" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search">
+            </div>
+            <div class="filter-btn-container">
+                <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterUsers()">
+                    <option selected >ALL</option>
+                    <option th:each="role: ${user_role}" th:value="${role}" th:text="${role}"></option>
+                </select>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div th:replace="components/table_fragment :: user-table" ></div>
