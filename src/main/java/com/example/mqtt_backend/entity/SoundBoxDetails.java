@@ -16,6 +16,7 @@ public class SoundBoxDetails {
     @SequenceGenerator(name = "sound_box_details_sequence", sequenceName = "sound_box_details_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sound_box_details_sequence")
     private long soundBoxId;
+    @Column(unique = true)
     private String serialNumber;
     private String topic;
 

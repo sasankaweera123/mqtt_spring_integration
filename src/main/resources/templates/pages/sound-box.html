@@ -12,8 +12,9 @@
                 <input type="search" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search">
             </div>
             <div class="filter-btn-container">
-                <label for="filterDropdown" class="form-label">Filter By Status</label>
-                <select id="filterDropdown" class="form-select" aria-label="Default select" onchange="filterByStatus(this)">
+                <label for="statusFilterDropdown" class="form-label">Filter By Status</label>
+                <select id="statusFilterDropdown" class="form-select" aria-label="Default select" onchange="filterByStatus(this)">
+                    <option th:value="ALL" th:text="ALL"></option>
                     <option th:each="group: ${sound_box_status}"
                             th:value="${group}" th:text="${group}"
                     ></option>
@@ -22,12 +23,19 @@
             <div class="filter-btn-container">
                 <label for="bankFilterDropdown" class="form-label">Filter By Bank</label>
                 <select id="bankFilterDropdown" class="form-select" aria-label="Default select" onchange="filterByBank(this)">
+                    <option th:value="ALL" th:text="ALL"></option>
                     <option th:each="group: ${bank_codes}"
                             th:value="${group}" th:text="${group}"
                     ></option>
                 </select>
             </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">Add Sound Box</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSoundBoxModal">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i> Add Sound Box
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importSoundBoxModal">
+                <i class="fa fa-upload" aria-hidden="true"></i> Import Sound Box
+            </button>
+            <div th:replace="components/modal/import_file :: import_file"></div>
         </div>
         <div class="sound-box-table">
             <div class="row">

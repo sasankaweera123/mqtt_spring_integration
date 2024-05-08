@@ -15,6 +15,8 @@ public class LoginUsers {
     private String email;
     private String username;
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     public LoginUsers() {

@@ -7,6 +7,7 @@ import com.example.mqtt_backend.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,6 +48,7 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(a->a
                         .requestMatchers("/"+ResourcePath.DASHBOARD, "/"+ResourcePath.SOUND_BOX).hasAnyAuthority(UserRole.ADMIN.name(),UserRole.BANKUSER.name())
                                 .requestMatchers("/"+ResourcePath.USERHANDLING).hasAuthority(UserRole.ADMIN.name())
+                                .requestMatchers(ResourcePath.MQTT).hasAuthority(UserRole.ADMIN.name())
                                 .requestMatchers(
                                 "/css/**",
                                 "/js/**",
@@ -62,7 +64,7 @@ public class SecurityConfig  {
                 .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
                         .logoutRequestMatcher(new AntPathRequestMatcher("/"+ResourcePath.LOGOUT))
                         .logoutSuccessUrl("/"+ResourcePath.LOGIN).permitAll()
-                );
+                ).httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

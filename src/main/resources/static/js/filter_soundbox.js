@@ -37,20 +37,26 @@ function changeRowLimit(select){
 
 function filterByStatus(select){
     var selectedValue = select.value;
-    window.location.href = '/soundbox/sound-box?page=0&size=10&soundBoxStatus=' + selectedValue;
+    window.location.href = '/soundbox/sound-box?page=0&size=1000000&soundBoxStatus=' + selectedValue;
 }
 
 function filterByBank(select){
     var selectedValue = select.value;
-    window.location.href = '/soundbox/sound-box?page=0&size=10&bankCode=' + selectedValue;
+    window.location.href = '/soundbox/sound-box?page=0&size=1000000&bankCode=' + selectedValue;
 
 }
 
 window.onload = function() {
     var urlParams = new URLSearchParams(window.location.search);
+    var soundBoxStatus = urlParams.get('soundBoxStatus');
     var bankCode = urlParams.get('bankCode');
     if (bankCode) {
         var bankDropdown = document.getElementById('bankFilterDropdown');
         bankDropdown.value = bankCode;
     }
+    if (soundBoxStatus) {
+        var statusDropdown = document.getElementById('statusFilterDropdown');
+        statusDropdown.value = soundBoxStatus;
+    }
 };
+

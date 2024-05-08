@@ -20,6 +20,8 @@ public class MqttRequest {
     private String message;
     private Long referenceId;
     private LocalDateTime timeStamp;
+
+    @Enumerated(EnumType.STRING)
     private MqttProcess process;
 
     public MqttRequest() {

@@ -11,7 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -112,6 +120,37 @@ public class SoundBoxService {
     public int getSoundBoxCount() {
         return soundBoxRepository.findAll().size();
     }
+
+
+    @Transactional
+    public void importSoundBoxDetails(MultipartFile file) {
+        try(BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            fileReader.readLine();
+            List<SoundBoxDetails> soundBoxDetailsList = new ArrayList<>();
+            while((line = fileReader.readLine()) != null) {
+                String[] data = line.split(",");
+                SoundBoxDetails soundBoxDetails = new SoundBoxDetails();
+                soundBoxDetails.setSerialNumber(data[0]);
+                soundBoxDetails.setMName(data[1]);
+                soundBoxDetails.setMAddress(data[2]);
+                soundBoxDetails.setMid(data[3]);
+                soundBoxDetails.setTid(data[4]);
+                soundBoxDetails.setDateAdded(LocalDate.parse(data[5]));
+                soundBoxDetails.setBankCode(BankCode.valueOf(data[6]));
+                soundBoxDetails.setSoundBoxStatus(SoundBoxStatus.valueOf(data[7]));
+                soundBoxDetailsList.add(soundBoxDetails);
+            }
+            soundBoxRepository.saveAll(soundBoxDetailsList);
+            logger.info("{} SoundBoxDetails imported", soundBoxDetailsList.size());
+
+        } catch (IOException e) {
+            logger.error("Failed to import SoundBoxDetails");
+            throw new IllegalArgumentException("Failed to import SoundBoxDetails");
+        }
+
+    }
+
 
     /**
      * Get SoundBoxDetails page

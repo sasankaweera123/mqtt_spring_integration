@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import com.example.mqtt_backend.constant.ResourcePath;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -108,11 +109,17 @@ public class SoundBoxController {
         Page<SoundBoxDetails> soundBoxDetailsPage = soundBoxService.getSoundBoxDetailsPage(PageRequest.of(page, size), BankCode.valueOf(bankCode), SoundBoxStatus.valueOf(soundBoxStatus));
         SoundBoxForm soundBoxForm = new SoundBoxForm();
 
+//        Remove All from BankCode and SoundBoxStatus
+        List<BankCode> bankCodes = new ArrayList<>(Arrays.asList(BankCode.values()));
+        bankCodes.remove(BankCode.ALL);
+        List<SoundBoxStatus> soundBoxStatuses = new ArrayList<>(Arrays.asList(SoundBoxStatus.values()));
+        soundBoxStatuses.remove(SoundBoxStatus.ALL);
+
         LoginUserUtil.loadLoginUser(model);
         model.addAttribute("sound_box_details", soundBoxDetailsPage);
         model.addAttribute("sound_box_form", soundBoxForm);
-        model.addAttribute("sound_box_status", SoundBoxStatus.values());
-        model.addAttribute("bank_codes", BankCode.values());
+        model.addAttribute("sound_box_status", soundBoxStatuses);
+        model.addAttribute("bank_codes", bankCodes);
 
         return ResourcePath.SOUND_BOX_PAGE;
     }
@@ -179,6 +186,21 @@ public class SoundBoxController {
         soundBox.setBankCode(soundBoxDetails.getBankCode());
         soundBox.setDateAdded(LocalDate.parse(soundBoxDetails.getDateAdded()));
         return soundBox;
+    }
+
+
+
+    @PostMapping(ResourcePath.SOUND_BOX_IMPORT)
+    public String importSoundBox(@RequestParam("importFile")MultipartFile file, RedirectAttributes model){
+        try {
+            soundBoxService.importSoundBoxDetails(file);
+            logger.warn("Import sound box details");
+            model.addFlashAttribute("message", "Successfully imported sound box details");
+        }catch (Exception e){
+            logger.error("Failed to import sound box details");
+            model.addFlashAttribute("message", "Failed to import sound box details");
+        }
+        return "redirect:/" + ResourcePath.SOUND_BOX;
     }
 
     /**

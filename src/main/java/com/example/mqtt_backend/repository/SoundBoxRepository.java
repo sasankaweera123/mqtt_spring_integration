@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @EnableJpaRepositories
 @Repository
@@ -16,4 +18,6 @@ public interface SoundBoxRepository extends JpaRepository<SoundBoxDetails, Long>
     Page<SoundBoxDetails> findAllByBankCode(BankCode bankCode, Pageable pageable);
     Page<SoundBoxDetails> findAllBySoundBoxStatus(SoundBoxStatus soundBoxStatus, Pageable pageable);
     Page<SoundBoxDetails> findAllByBankCodeAndSoundBoxStatus(BankCode bankCode, SoundBoxStatus soundBoxStatus, Pageable pageable);
+
+    Optional<SoundBoxDetails> findByMidAndTid(String mid, String tid);
 }
