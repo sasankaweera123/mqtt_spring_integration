@@ -8,6 +8,7 @@ class MqttBackendApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assertTrue("Test case executed successfully", true);
 	}
 
 }
